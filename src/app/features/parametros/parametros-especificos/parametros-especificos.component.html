@@ -1,0 +1,267 @@
+<h1>Parámetros Especificos</h1>
+<!-- FORMULARIO REACTIVO -->
+
+<!-- FORMULARIO BUSQUEDA SIMPLE -->
+<div class="card flex justify-content-center align-content-center text-center">
+  <div class="busqueda-simple" *ngIf="busquedaSimple">
+    <h4>Busqueda simple</h4>
+    <form [formGroup]="formularioBusquedaSimple" class="formgroup-inline">
+
+
+      <div class="field">
+        <select class="w-full text-color surface-overlay"
+                formControlName="selectedIndice" (change)="cambiarCampoDeBusqueda()">
+          <option *ngFor="let option of opcionesBusqueda" value="{{option.value}}">{{option.label}} </option>
+        </select>
+      </div>
+
+      <div *ngIf="campoBusqueda <=3 " class="field">
+        <input class="inputfield w-full" type="text" pInputText
+               formControlName="campoBuscar" autocomplete="off">
+      </div>
+
+      <div *ngIf="campoBusqueda === 4" class="field">
+        <select class="w-full  text-color surface-overlay"
+                style="appearance: auto" formControlName="campoBuscar">
+          <option *ngFor="let option of grupoOpciones" value="{{option.value}}">{{option.label}} </option>
+        </select>
+      </div>
+
+      <div *ngIf="campoBusqueda === 5" class="field">
+        <select class="w-full  text-color surface-overlay"
+                style="appearance: auto" formControlName="campoBuscar">
+          <option *ngFor="let option of tipoValidacionOpciones" value="{{option.value}}">{{option.label}} </option>
+        </select>
+      </div>
+
+
+      <button pButton type="submit" icon="pi pi-search" iconPos="right" label="Ir"
+              (click)="buscarPorFiltroSimple()"></button>
+
+      <button pButton type="button" class="ml-2" id="btnBusquedaAvanzada" (click)="cambiarBusqueda(false)"
+              label="Busqueda Avanzada"></button>
+
+    </form>
+
+  </div>
+
+  <!-- FORMULARIO BUSQUEDA SIMPLE -->
+
+
+  <!-- FORMULARIO BUSQUEDA AVANZADA -->
+  <div class="busqueda-avanzada" *ngIf="!busquedaSimple">
+
+    <br>
+
+    <div class="acciones-busqueda-avanzada mb-3">
+
+      <h4>Busqueda Avanzada</h4>
+
+      <button pButton type="button" id="btnBusquedaSimple" icon="pi pi-arrow-circle-left" iconPos="left"
+              class="mr-1" (click)="cambiarBusqueda(true)" label="Volver a Busqueda simple"></button>
+
+      <button pButton type="button" icon="pi pi-search" iconPos="right" class="mr-1" label="Buscar"
+              (click)="buscarPorFiltroAvanzado()"></button>
+
+      <button pButton type="button" icon="pi pi-times-circle" iconPos="right" class="" label="Limpiar"
+              (click)="limpiarCamposFormularioBusquedaAvanzada()"></button>
+
+
+    </div>
+
+
+    <form [formGroup]="formularioBusquedaAvanzada" class="formgrid">
+
+      <div class="card">
+        <div class="formgrid">
+
+          <div class="grid justify-content-center">
+            <div class="field col-2">
+              <label for="codigo">Código</label>
+
+              <input id="codigo" class="inputfield w-full" type="text"
+                     pInputText autocomplete="off" name="codigo" formControlName="codigo">
+            </div>
+
+            <div class="field col-3">
+              <label for="codigo">Nombre</label>
+
+              <input id="nombre" class="inputfield w-full" type="text"
+                     pInputText autocomplete="off" name="nombre" formControlName="nombre">
+            </div>
+
+            <div class="field col-5">
+              <label for="descripcion">Descripción</label>
+
+              <input id="descripcion" class="inputfield w-full" type="text"
+                     pInputText autocomplete="off" name="descripcion" formControlName="descripcion">
+            </div>
+          </div>
+
+          <div class="grid justify-content-center">
+
+            <div class="field col-5">
+              <label for="descripcion">Grupo</label>
+
+              <select class="w-full  text-color surface-overlay" name="grupo" id="grupo" style="appearance: auto"
+                      formControlName="grupo">
+                <option *ngFor="let option of grupoOpciones" value="{{option.value}}">{{option.label}} </option>
+              </select>
+            </div>
+
+            <div class="field col-5">
+              <label for="tipoValidacion">Tipo Validación</label>
+
+              <select class="w-full  text-color surface-overlay" name="tipoValidacion" id="tipoValidacion" style="appearance: auto"
+                      formControlName="tipoValidacion">
+                <option *ngFor="let option of tipoValidacionOpciones" value="{{option.value}}">{{option.label}} </option>
+              </select>
+            </div>
+          </div>
+
+
+        </div>
+      </div>
+
+    </form>
+
+  </div>
+  <!-- FORMULARIO BUSQUEDA AVANZADA -->
+
+</div>
+
+
+<!--TABLA QUE MUESTRA LOS PARAMETROS ESPECIFICOS -->
+<div class="parametros-especificos">
+
+  <button pButton type="button" class="ml-2" id="detalles" (click)="mostrarDialogDetallesParamatero()"
+          label="Detalles"></button>
+
+
+  <p-table #turboTable
+           paginatorPosition="top"
+           [rows]="10"
+           [showCurrentPageReport]="true"
+           responsiveLayout="scroll"
+           selectionMode="single"
+           [paginator]="true"
+           [(selection)]="parametroEspecificoSeleccionado"
+           (onRowUnselect)="deSeleccionarFila()"
+           dataKey="codigo"
+           [value]=" this.parametrosEspecificosResponse.content"
+           [totalRecords]=" this.parametrosEspecificosResponse.totalElements "
+           [lazy]="true"
+           (onLazyLoad)="cambiarPageParametrosEspecificos($event)"
+           currentPageReportTemplate="Mostrando {first} a {{offSetParametrosEspecificosGeneral}} de {{  this.parametrosEspecificosResponse.totalElements }} registros "
+
+           styleClass="p-datatable-sm p-datatable-gridlines" class="text-base">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Código</th>
+        <th>Nombre</th>
+        <th>Descripcion</th>
+        <th>Grupo</th>
+        <th>Tipo Validación</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-parametroEspecifico>
+      <tr [pSelectableRow]="parametroEspecifico" let>
+        <td> {{ parametroEspecifico.codigo }}  </td>
+        <td> {{ parametroEspecifico.nombre }}  </td>
+        <td> {{ parametroEspecifico.descripcion }}   </td>
+        <td> {{ parametroEspecifico.grupo }}  </td>
+        <td> {{ parametroEspecifico.tipoValidacion }}  </td>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="5">No hay registros disponibles</td>
+      </tr>
+    </ng-template>
+
+  </p-table>
+
+</div>
+
+
+<!--DIALOG DETALLES -->
+
+
+<p-dialog [(visible)]="mostrarDialogDetalles"
+          [modal]="true"
+          [style]="{width: '50%'}"
+          [baseZIndex]="10000"
+          [draggable]="false">
+
+  <ng-template pTemplate="header">
+    <h2> Editar Parametros Específicos {{ parametroEspecificoSeleccionado.nombre }} </h2>
+  </ng-template>
+  <div class="card">
+
+
+    <form class="formgrid" [formGroup]="formularioParametrosEspecificos">
+      <button pButton type="button" (click)="grabarParametroEspecificoEditado()" id="btnGuardar" label="Grabar"></button>
+
+      <p-paginator #paginador
+                   [rows]="1"
+                   [totalRecords]="this.parametrosEspecificosResponse.totalElements"
+                   currentPageReportTemplate="{first} de {{ this.parametrosEspecificosResponse.totalElements }}"
+                   [showCurrentPageReport]="true"
+                   [pageLinkSize]="1"
+                   (onPageChange)="cambiarPageParametroEspecificoSeleccionado($event)">
+      </p-paginator>
+
+      <div class="field grid justify-content-center">
+        <label class="col-12 mb-2 md:col-2 md:mb-0 lbl-info-proceso">Código</label>
+        <div class="col-12 md:col-3">
+          <span class="text-sm">{{ parametroEspecificoSeleccionado.codigo }}</span>
+        </div>
+      </div>
+
+      <div class="field grid justify-content-center">
+        <label class="col-12 mb-2 md:col-2 md:mb-0 lbl-info-proceso">Nombre</label>
+        <div class="col-12 md:col-3">
+          <span class="text-sm"> {{ parametroEspecificoSeleccionado.nombre }}  </span>
+        </div>
+      </div>
+
+      <div class="field grid justify-content-center">
+        <label class="col-12 mb-2 md:col-2 md:mb-0  lbl-info-proceso">Descripción</label>
+        <div class="col-12 md:col-3">
+          <span class="text-sm"> {{ parametroEspecificoSeleccionado.descripcion }}  </span>
+        </div>
+      </div>
+
+      <div class="field grid justify-content-center">
+        <label class="col-12 mb-2 md:col-2 md:mb-0 lbl-info-proceso">* Grupo</label>
+        <div class="col-12 md:col-3">
+          <select class="w-full  text-color surface-overlay" style="appearance: auto" formControlName="grupo">
+            <option *ngFor="let option of grupoOpciones" value="{{option.value}}">
+              {{option.label}}
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field grid justify-content-center">
+        <label class="col-12 mb-2 md:col-2 md:mb-0 lbl-info-proceso">* Tipo Validación</label>
+        <div class="col-12 md:col-3">
+          <select class="w-full  text-color surface-overlay" name="tipoValidacion" formControlName="tipoValidacion">
+            <option *ngFor="let option of tipoValidacionOpciones" value="{{option.value}}">
+              {{option.label}}
+            </option>
+          </select>
+        </div>
+      </div>
+    </form>
+
+  </div>
+
+  <ng-template pTemplate="footer">
+    <p class="campos-obligatorios text-left">Los campos marcados con asterisco (*) son obligatorios</p>
+    <hr>
+  </ng-template>
+
+
+</p-dialog>

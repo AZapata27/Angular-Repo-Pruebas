@@ -1,0 +1,205 @@
+<button pButton type="button" iconPos="right" class="mr-2" label="Cancelar" (click)="cerrarDialog()"></button>
+<button pButton type="button" iconPos="right" class="mr-2" label="Seleccionar" (click)="enviarCreditoSelecionado()"></button>
+
+
+<br><br>
+
+
+<div class="card flex justify-content-center align-content-center text-center">
+  <div class="busqueda-simple" *ngIf="busquedaSimple">
+    <h4>Busqueda simple</h4>
+    <form [formGroup]="formularioBusquedaSimple" class="formgroup-inline">
+
+      <div class="field">
+        <select class="w-full text-color surface-overlay"
+                formControlName="selectedIndice" (change)="cambiarCampoDeBusqueda()">
+          <option *ngFor="let option of opciones" value="{{option.value}}">{{option.label}} </option>
+        </select>
+      </div>
+
+      <div *ngIf="campoBusqueda === 1 || campoBusqueda === 3 || campoBusqueda === 4 ||
+                      campoBusqueda === 5 || campoBusqueda === 7 " class="field">
+        <input class="inputfield w-full" id="txtBuscar" type="text" pInputText
+               formControlName="campoBuscar" autocomplete="off">
+      </div>
+
+      <div *ngIf="campoBusqueda === 2" class="field">
+
+        <select class="w-full  text-color surface-overlay"
+                style="appearance: auto" formControlName="campoBuscar">
+          <option *ngFor="let option of tipoIdentificacion" value="{{option.value}}">{{option.label}} </option>
+        </select>
+
+      </div>
+
+
+      <div *ngIf="campoBusqueda === 6" class="field">
+
+        <select class="w-full  text-color surface-overlay"
+                style="appearance: auto" formControlName="campoBuscar">
+          <option *ngFor="let option of  lineasCredito" value="{{option.value}}">{{option.label}} </option>
+        </select>
+
+      </div>
+
+      <button pButton type="submit" icon="pi pi-search" iconPos="right" label="Ir"
+              (click)="buscarPorFiltroSimple()"></button>
+
+      <button pButton type="button" class="ml-2" id="btnBusquedaAvanzada" (click)="cambiarBusqueda(false)"
+              label="Busqueda Avanzada"></button>
+
+    </form>
+
+  </div>
+
+  <div class="busqueda-avanzada" *ngIf="!busquedaSimple">
+
+    <br>
+
+    <div class="acciones-busqueda-avanzada mb-3">
+
+      <h4>Busqueda Avanzada</h4>
+
+      <button pButton type="button" id="btnBusquedaSimple" icon="pi pi-arrow-circle-left" iconPos="left"
+              class="mr-1" (click)="cambiarBusqueda(true)" label="Volver a Busqueda simple"></button>
+
+      <button pButton type="button" icon="pi pi-search" iconPos="right" class="mr-1" label="Buscar"
+              (click)="buscarPorFiltroAvanzado()"></button>
+
+      <button pButton type="button" icon="pi pi-times-circle" iconPos="right" class="" label="Limpiar"
+              (click)="limpiarCamposFormularioBusquedaAvanzada()"></button>
+
+
+    </div>
+
+
+    <form [formGroup]="formularioBusquedaAvanzada" class="formgrid">
+
+      <div class="card">
+        <div class="formgrid grid">
+
+          <div class="field col-3">
+            <label for="numeroCredito">Número Crédito: </label>
+            <input class="inputfield w-full" type="text"
+                   pInputText autocomplete="off" formControlName="numeroCredito">
+          </div>
+
+          <div class="field col-3">
+            <label for="tipoIdentificacion">Tipo Identificacion titular: </label>
+            <select class="w-full  text-color surface-overlay"
+                    style="appearance: auto" formControlName="tipoIdentificacion">
+              <option *ngFor="let option of tipoIdentificacion" value="{{option.value}}">{{option.label}} </option>
+            </select>
+          </div>
+
+          <div class="field col-3">
+            <label for="identificacionTitular">Identificación Titular </label>
+            <input class="inputfield w-full" type="text"
+                   pInputText autocomplete="off" formControlName="identificacionTitular">
+          </div>
+
+          <div class="field col-3">
+            <label for="nombreTitular">Nombre Titular </label>
+            <input class="inputfield w-full" type="text"
+                   pInputText autocomplete="off" formControlName="nombreTitular">
+          </div>
+
+          <div class="field col-3">
+            <label for="apellidosTitular">Apellidos Titular</label>
+            <input class="inputfield w-full" type="text"
+                   pInputText autocomplete="off" formControlName="apellidosTitular">
+          </div>
+
+          <div class="field col-3">
+            <label for="lineaCredito">Linea Crédito</label>
+            <select class="w-full  text-color surface-overlay"
+                    style="appearance: auto" formControlName="lineaCredito">
+              <option *ngFor="let option of lineasCredito" value="{{option.value}}">{{option.label}} </option>
+            </select>
+          </div>
+
+          <div class="field col-3">
+            <label for="monto">Monto</label>
+            <input class="inputfield w-full" type="text"
+                   pInputText autocomplete="off" formControlName="monto">
+          </div>
+
+        </div>
+
+      </div>
+
+    </form>
+
+
+  </div>
+
+
+</div>
+
+<br>
+
+
+<br><br><br><br>
+
+<div class="tabulacion">
+  <div class="card">
+    <p-table #turboTable [value]="creditosVigentes.content" sortMode="multiple" [paginator]="true"
+             (onRowUnselect)="deSeleccionarFila()"
+             [rows]="15" [showCurrentPageReport]="true" selectionMode="single"
+             paginatorPosition="both"
+             [(selection)]="creditoSeleccionado"
+             responsiveLayout="scroll" [scrollable]="true"
+             [totalRecords]="creditosVigentes.totalElements"
+             styleClass="p-datatable-sm p-datatable-gridlines"
+             scrollHeight="80%"
+             [lazy]="true"
+             (onLazyLoad)="cambiarPage($event)"
+             currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros">
+
+
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Número Crédito</th>
+          <th>Estado</th>
+          <th>Tipo Identificación Titular</th>
+          <th>Identificación Titular</th>
+          <th>Nombre Titular</th>
+          <th>Apellidos Titular</th>
+          <th>Línea de Crédito</th>
+          <th>Monto</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-credito>
+        <tr [pSelectableRow]="credito">
+          <td>{{credito.numeroCredito}}</td>
+          <td>{{credito.estado}}</td>
+          <td>{{credito.tipoIdentificacionTitular }}</td>
+          <td>{{credito.identificacionTitular}}</td>
+          <td>{{credito.nombreTitular}}</td>
+          <td>{{credito.apellidosTitular}}</td>
+          <td>{{credito.lineaCredito}}</td>
+          <td>{{credito.monto | number }}</td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="2">No hay registros disponibles</td>
+        </tr>
+      </ng-template>
+
+
+    </p-table>
+  </div>
+</div>
+
+
+<br><br>
+
+
+<button pButton type="button" iconPos="right" class="mr-2" label="Cancelar" (click)="cerrarDialog()"></button>
+<button pButton type="button" iconPos="right" class="mr-2" label="Seleccionar" (click)="enviarCreditoSelecionado()"></button>
+
+
+
+

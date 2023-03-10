@@ -1,0 +1,15 @@
+<p-dialog [(visible)]="mostrarMensaje" [modal]="true"
+          [style]="{
+    'width': '30%',
+    'text-align': 'center',
+    'background': '#FFFFFF',
+    'border': 'solid #003E6C',
+    'color': '#73000c'}" [baseZIndex]="10000"
+          [draggable]="false" [closable]="false" [resizable]="false">
+  <span class="mt-2"><i class="{{icon}}" style="font-size: 2rem"></i></span>
+  <p class="m-0 mt-1" [innerHTML]='detalleMensaje'></p>
+  <ng-template pTemplate="footer">
+    <p-button [style]="{'margin-right': '38%'}" label="ACEPTAR" (onClick)="cerrarModalError()" class="p-button-text"></p-button>
+  </ng-template>
+</p-dialog>
+

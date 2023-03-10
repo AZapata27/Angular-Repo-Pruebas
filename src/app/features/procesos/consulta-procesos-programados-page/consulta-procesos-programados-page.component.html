@@ -1,0 +1,291 @@
+<h1>Consulta de procesos programados</h1>
+
+<div class="card flex justify-content-center align-content-center text-center">
+  <div class="busqueda-simple" *ngIf="busquedaSimple">
+    <h4>Busqueda simple</h4>
+
+    <form [formGroup]="formularioBusquedaSimple" class="formgroup-inline">
+      <!--Indice a seleccionar -->
+      <div class="field">
+        <select class="w-full text-color surface-overlay"
+                formControlName="selectedIndice" (change)="cambiarCampoDeBusqueda()">
+          <option *ngFor="let option of opciones" value="{{option.value}}">{{option.label}} </option>
+        </select>
+        <!--  <p-dropdown [options]="opciones" class="indices" (onChange)="cambiarCampoDeBusqueda($event)" optionLabel="label"
+          formControlName="selectedIndice"  ></p-dropdown>-->
+      </div>
+
+      <!--Buscar por nombre del proceso-->
+      <div *ngIf="buscarComoOption === 1 || buscarComoOption === 13" class="field">
+        <input class="inputfield w-full" type="text"
+               formControlName="campoBuscar" pInputText autocomplete="off">
+      </div>
+
+      <!-- buscar por la periodicidad -->
+      <div *ngIf="buscarComoOption === 2" class="field">
+        <select class="w-full text-sm text-color surface-overlay"
+                formControlName="campoBuscar">
+
+          <option *ngFor="let per of periodicidad"
+                  value="{{per.value}}">{{per.label}}
+          </option>
+        </select>
+      </div>
+
+      <!--buscar por fecha inicio y fecha especifica-->
+      <div *ngIf="buscarComoOption === 3 || buscarComoOption === 4" class="field">
+        <p-calendar [showIcon]="true" class="inputfield w-full" inputId="fecha-inicio"
+                    formControlName="campoBuscar" dateFormat="dd-mm-yy" (onInput)="validarFechas($event, 'campoBuscar')">
+        </p-calendar>
+      </div>
+
+      <!--Buscar por deplegable Si y No  -->
+      <div *ngIf="buscarComoOption >=5 && buscarComoOption <= 12 " class="field">
+        <select class="w-full text-sm text-color surface-overlay"
+                formControlName="campoBuscar">
+
+          <option *ngFor="let option of siYNoOpciones "
+                  value="{{option.value}}">{{option.label}}
+          </option>
+        </select>
+      </div>
+
+
+      <button pButton type="submit" icon="pi pi-search" iconPos="right" label="Buscar"
+              (click)="buscarPorFiltroSimple()"></button>
+
+      <button pButton type="button" id="btnBusquedaAvanzada" class="ml-1" (click)="cambiarBusqueda(false)"
+              label="Busqueda Avanzada"></button>
+
+    </form>
+
+  </div>
+
+
+  <div class="busqueda-avanzada" *ngIf="!busquedaSimple">
+    <h4>Busqueda avanzada</h4>
+
+    <div class="acciones-busqueda-avanzada mb-3">
+
+      <button pButton type="button" id="btnBusquedaSimple" icon="pi pi-arrow-circle-left" iconPos="left"
+              class="mr-1" (click)="cambiarBusqueda(true)" label="Volver a Busqueda simple"></button>
+
+      <button pButton type="button" icon="pi pi-search" iconPos="right" class="mr-1" label="Buscar"
+              (click)="buscarPorFiltroAvanzado()"></button>
+
+      <button pButton type="button" icon="pi pi-times-circle" iconPos="right" class="" label="Limpiar"
+              (click)="limpiarCamposFormularioBusquedaAvanzada()"></button>
+    </div>
+
+
+    <form [formGroup]="formularioBusquedaAvanzada" class="formgrid">
+
+      <div class="card">
+        <div class="formgrid grid">
+
+          <div class="field col-3">
+            <label for="proceso">Proceso</label>
+            <input class="inputfield w-full" type="text"
+                   pInputText autocomplete="off" formControlName="proceso">
+          </div>
+
+          <div class="field col-3">
+            <label for="periodicidad">Periodicidad</label>
+            <select class="w-full text-sm text-color surface-overlay" formControlName="periodicidad">
+
+              <option *ngFor="let per of periodicidad"
+                      value="{{per.value}}">{{per.label}}
+              </option>
+            </select>
+          </div>
+
+          <div class="field col-3">
+            <label for="fecha-inicio">Fecha inicio</label>
+            <p-calendar [showIcon]="true" class="inputfield w-full" inputId="fechaInicio"
+                        dateFormat="dd-mm-yy" formControlName="fechaInicio"
+                        name="fechaInicio" (onInput)="validarFechas($event, 'fechaInicio')">
+            </p-calendar>
+          </div>
+
+          <div class="field col-3">
+            <label for="fecha-especifica">Fecha Especifica</label>
+            <p-calendar [showIcon]="true" class="inputfield w-full" inputId="fechaEspecifica"
+                        dateFormat="dd-mm-yy" formControlName="fechaEspecifica"
+                        name="fechaEspecifica" (onInput)="validarFechas($event, 'fechaEspecifica')">
+            </p-calendar>
+          </div>
+
+          <div class="field col-3">
+            <label for="dias-habiles">¿Sólo Días Hábiles?</label>
+            <select class="w-full text-sm text-color surface-overlay" formControlName="diasHabiles">
+
+              <option *ngFor="let option of siYNoOpciones "
+                      value="{{option.value}}">{{option.label}}
+              </option>
+            </select>
+          </div>
+
+          <div class="field col-1">
+            <label for="domingo">¿Domingo? </label>
+            <select class="w-full text-sm text-color surface-overlay" formControlName="domingo">
+
+              <option *ngFor="let option of siYNoOpciones "
+                      value="{{option.value}}">{{option.label}}
+              </option>
+            </select>
+          </div>
+
+          <div class="field col-1">
+            <label for="lunes">¿Lunes? </label>
+            <select class="w-full text-sm text-color surface-overlay" formControlName="lunes">
+
+              <option *ngFor="let option of siYNoOpciones "
+                      value="{{option.value}}">{{option.label}}
+              </option>
+            </select>
+          </div>
+
+          <div class="field col-1">
+            <label for="martes">¿Martes? </label>
+            <select class="w-full text-sm text-color surface-overlay" formControlName="martes">
+
+              <option *ngFor="let option of siYNoOpciones "
+                      value="{{option.value}}">{{option.label}}
+              </option>
+            </select>
+          </div>
+
+          <div class="field col-1">
+            <label for="miercoles">¿Miercoles? </label>
+            <select class="w-full text-sm text-color surface-overlay" formControlName="miercoles">
+
+              <option *ngFor="let option of siYNoOpciones "
+                      value="{{option.value}}">{{option.label}}
+              </option>
+            </select>
+          </div>
+
+          <div class="field col-1">
+            <label for="jueves">¿Jueves? </label>
+            <select class="w-full text-sm text-color surface-overlay" formControlName="jueves">
+
+              <option *ngFor="let option of siYNoOpciones "
+                      value="{{option.value}}">{{option.label}}
+              </option>
+            </select>
+          </div>
+
+          <div class="field col-1">
+            <label for="viernes">¿Viernes? </label>
+            <select class="w-full text-sm text-color surface-overlay" formControlName="viernes">
+
+              <option *ngFor="let option of siYNoOpciones "
+                      value="{{option.value}}">{{option.label}}
+              </option>
+            </select>
+          </div>
+
+          <div class="field col-1">
+            <label for="sabado">¿Sabado? </label>
+            <select class="w-full text-sm text-color surface-overlay" formControlName="sabado">
+
+              <option *ngFor="let option of siYNoOpciones "
+                      value="{{option.value}}">{{option.label}}
+              </option>
+            </select>
+          </div>
+
+          <div class="field col-2">
+            <label for="diaDelMes">Dia del mes</label>
+
+            <input class="inputfield w-full" type="text"
+                   pInputText autocomplete="off" formControlName="diaDelMes">
+
+          </div>
+
+        </div>
+
+
+      </div>
+
+
+    </form>
+    <br>
+
+  </div>
+
+</div>
+
+<br>
+<br>
+
+
+<div class="tabulacion">
+
+  <button pButton type="button" label="Subprocesos" class="mt-3" (click)="buscarSubprocesos()"></button>
+
+  <div class="card justify-content-center align-content-center text-center">
+
+    <p-table [value]="this.procesosProgramadosResponse.content" (onRowUnselect)="deSeleccionarFila()"
+             [resizableColumns]="true" styleClass="p-datatable-gridlines"
+             sortMode="multiple" paginatorPosition="both"
+             [showCurrentPageReport]="true" selectionMode="single" responsiveLayout="scroll"
+             [(selection)]="procesoProgramadoSeleccionado"
+             [style]="{'text-align':'center'}"
+             [paginator]="true"
+             [rows]="15"
+             [lazy]="true"
+             (onLazyLoad)="cambiarPage($event)"
+             [totalRecords]="this.procesosProgramadosResponse.totalElements"
+             styleClass="p-datatable-sm p-datatable-gridlines" class="text-base"
+             currentPageReportTemplate="Mostrando {first} a {last} de {{this.procesosProgramadosResponse.totalElements}} registros"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+
+          <th>Proceso</th>
+          <th>Periodicidad</th>
+          <th [innerHTML]="'Fecha Inicio'" style="width: 5.4rem; "></th>
+          <th> Fecha Específica</th>
+          <th>¿Sólo Días Hábiles?</th>
+          <th>¿Domingo?</th>
+          <th>¿Lunes?</th>
+          <th> ¿Martes?</th>
+          <th>¿Miércoles?</th>
+          <th> ¿Jueves?</th>
+          <th> ¿Viernes?</th>
+          <th>¿Sábado?</th>
+          <th>Día del Mes</th>
+
+        </tr>
+
+      </ng-template>
+      <ng-template pTemplate="body" let-procesoProgramado>
+        <tr [pSelectableRow]="procesoProgramado">
+          <td>{{procesoProgramado.procesosNombre}}</td>
+          <td>{{procesoProgramado.tipo}}</td>
+          <td>{{procesoProgramado.fechaInicio}}</td>
+          <td>{{procesoProgramado.fechaEspecifica}}</td>
+          <td>{{procesoProgramado.soloDiaHabil}}</td>
+
+          <td>{{procesoProgramado.domingo}}</td>
+          <td>{{procesoProgramado.lunes}}</td>
+          <td>{{procesoProgramado.martes}}</td>
+          <td>{{procesoProgramado.miercoles}}</td>
+          <td>{{procesoProgramado.jueves}}</td>
+          <td>{{procesoProgramado.viernes}}</td>
+          <td>{{procesoProgramado.sabado}}</td>
+          <td>{{procesoProgramado.diaMes}}</td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="13">No hay registros disponibles</td>
+        </tr>
+      </ng-template>
+
+    </p-table>
+
+  </div>
+</div>

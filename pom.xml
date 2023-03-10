@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>co.gov.banrep.kepiaa</groupId>
+  <artifactId>frontend</artifactId>
+  <version>1.0.2</version>
+  <packaging>war</packaging>
+
+  <name>kepiaa-frontend</name>
+
+  <description>Compilacion de despliegue frontend kepiaa</description>
+
+  <properties>
+    <failOnMissingWebXml>false</failOnMissingWebXml>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-war-plugin</artifactId>
+        <version>3.3.1</version>
+        <configuration>
+          <warSourceDirectory>./kepiaa-angular-war/src/main/webapp</warSourceDirectory>
+          <failOnMissingWebXml>false</failOnMissingWebXml>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+  <distributionManagement>
+    <repository>
+      <id>central</id>
+      <name>WARTI1D-releases</name>
+      <url>http://192.168.68.19:8081/artifactory/libs-release-banrep-local</url>
+    </repository>
+    <snapshotRepository>
+      <id>snapshots</id>
+      <name>WARTI1D-snapshots</name>
+      <url>http://192.168.68.19:8081/artifactory/libs-release-banrep-local</url>
+    </snapshotRepository>
+  </distributionManagement>
+
+</project>

@@ -1,0 +1,360 @@
+<h1>Parámetros Comunes Pendientes</h1>
+
+<!--TABLA PARAMETROS COMUNES -->
+
+<section class="tabulacion-parametros-comunes">
+  <div class="parametros-especificos">
+
+    <button pButton type="button" class="ml-2" id="detalles" (click)="mostrarDialogDetallesParamatero()"
+            label="Detalles"></button>
+
+    <p-table
+      #turboTable
+      paginatorPosition="top"
+      [scrollable]="true"
+      [rows]="10"
+      [showCurrentPageReport]="true"
+      selectionMode="single"
+      [paginator]="true"
+      [(selection)]="parametroComunSeleccionado"
+      (onRowUnselect)="deSeleccionarFila()"
+      dataKey="codigo"
+      scrollDirection="both"
+      [value]=" this.parametrosComunesResponse.content"
+      [totalRecords]=" this.parametrosComunesResponse.totalElements "
+      [lazy]="true"
+      (onLazyLoad)="cambiarPageParametrosComunes($event)"
+      styleClass="p-datatable-gridlines"
+      currentPageReportTemplate="Mostrando {{offSetParametrosComunesGeneral}}  a {last} de {{  this.parametrosComunesResponse.totalElements }} registros ">
+      <ng-template pTemplate="header">
+        <tr>
+          <th style="width: 4vw">Código</th>
+          <th style="width: 10vw">Nombre</th>
+          <th style="width: 25vw">Descripción</th>
+          <th style="width: 6vw">Grupo</th>
+          <th style="width: 5vw">Tipo Validación</th>
+          <th style="width: 6vw">¿Multivaluado?</th>
+          <th style="width: 7vw">Tipo Dato</th>
+          <th style="width: 6vw">Longitud</th>
+          <th style="width: 8vw">Unidad</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-parametroComun>
+        <tr class="text-left" [pSelectableRow]="parametroComun" (dblclick)="seleccionarRowParamComunesPendiente(parametroComun)">
+          <td style="width: 4vw"> {{ parametroComun.codigo }}  </td>
+          <td style="width: 10vw"> {{ parametroComun.nombre }}  </td>
+          <td style="width: 25vw"> {{ parametroComun.descripcion }}   </td>
+          <td style="width: 6vw"> {{ parametroComun.grupo }}  </td>
+          <td style="width: 5vw"> {{ parametroComun.tipoValidacion }}  </td>
+          <td style="width: 6vw"> {{ parametroComun.multivaluado}} </td>
+          <td style="width: 7vw"> {{ parametroComun.tipoDato}}</td>
+          <td style="width: 6vw"> {{ parametroComun.longitud}}</td>
+          <td style="width: 8vw"> {{ parametroComun.unidad}}</td>
+        </tr>
+      </ng-template>
+    </p-table>
+
+  </div>
+
+</section>
+
+
+<!--
+
+ DIALOG DETALLES
+-->
+
+<p-dialog [(visible)]="mostrarDialogDetalles"
+          [modal]="true"
+          [style]="{width: '80%'}"
+          [baseZIndex]="10000"
+          [draggable]="false"
+          [dismissableMask]="true">
+
+  <ng-template pTemplate="header">
+    <h2> Editar Parámetro Común {{ parametroComunSeleccionado.descripcion }}  </h2>
+  </ng-template>
+  <div class="card">
+
+
+    <form class="formgrid" [formGroup]="formularioParametrosComunes">
+
+
+      <p-paginator #paginador
+                   [rows]="1"
+                   [totalRecords]="this.parametrosComunesResponse.totalElements"
+                   currentPageReportTemplate="{first} de {{ this.parametrosComunesResponse.totalElements }}"
+                   [showCurrentPageReport]="true"
+                   [pageLinkSize]="1"
+                   (onPageChange)="cambiarPageParametroComunSeleccionado($event)">
+      </p-paginator>
+
+
+      <div class="field grid mb-2 ">
+        <label class="col-12 mb-2 md:col-2 md:mb-0" style="background: #EEE;  width: 15rem; ">Código</label>
+        <div class="col-12 md:col-3">
+          <span class="text-sm">{{  parametroComunSeleccionado.codigo }}</span>
+        </div>
+      </div>
+
+      <div class="field grid mb-2">
+        <label class="col-12 mb-2 md:col-2 md:mb-0" style="background: #EEE;  width: 15rem; ">Nombre</label>
+        <div class="col-12 md:col-9">
+          <span class="text-sm" style="width: 20rem !important;"> {{  parametroComunSeleccionado.nombre }}  </span>
+        </div>
+      </div>
+
+      <div class="field grid mb-2">
+        <label class="col-12 mb-2 md:col-2 md:mb-0" style="background: #EEE;  width: 15rem ">* Descripción</label>
+        <div class="col-12 md:col-3">
+          <input id="descripcion" class="inputfield w-full" type="text"
+                 pInputText autocomplete="off" name="descripcion" formControlName="descripcion"
+                 style="appearance: auto; height: 20px !important; width: 30rem !important;">
+        </div>
+      </div>
+
+      <div class="field grid mb-2">
+        <label class="col-12 mb-2 md:col-2 md:mb-0" style="background: #EEE;  width: 15rem; ">* Grupo</label>
+        <div class="col-12 md:col-3">
+          <select class="w-full  text-color surface-overlay" formControlName="grupo"
+                  style="appearance: auto; height: 20px !important;">
+            <option *ngFor="let option of grupoOpciones" value="{{option.value}}">
+              {{option.label}}
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field grid mb-2">
+        <label class="col-12 mb-2 md:col-2 md:mb-0" style="background: #EEE;  width: 15rem; ">* Tipo Validación</label>
+        <div class="col-12 md:col-3">
+          <select class="w-full  text-color surface-overlay" name="tipoValidacion" formControlName="tipoValidacion"
+                  style="appearance: auto; height: 20px !important;">
+            <option *ngFor="let option of tipoValidacionOpciones" value="{{option.value}}">
+              {{option.label}}
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field grid mb-2">
+        <label class="col-12 mb-2 md:col-2 md:mb-0" style="background: #EEE;  width: 15rem; ">¿Multivaluado?</label>
+        <div class="col-12 md:col-3">
+          <span class="text-sm">  {{ parametroComunSeleccionado.multivaluado }} </span>
+        </div>
+      </div>
+
+      <div class="field grid mb-2">
+        <label class="col-12 mb-2 md:col-2 md:mb-0" style="background: #EEE;  width: 15rem; ">Tipo Dato</label>
+        <div class="col-12 md:col-3">
+          <select class="w-full  text-color surface-overlay" name="tipoDato" formControlName="tipoDato"
+                  id="tipoDato" style="appearance: auto; height: 20px !important;">
+            <option *ngFor="let option of tipoDatoOpciones" value="{{option.value}}">{{option.label}} </option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field grid mb-2">
+        <label class="col-12 mb-2 md:col-2 md:mb-0" style="background: #EEE;  width: 15rem; ">Longitud</label>
+        <div class="col-12 md:col-3">
+          <span class="text-sm"> {{ parametroComunSeleccionado.longitud  }}  </span>
+        </div>
+      </div>
+
+      <div class="field grid mb-2">
+        <label class="col-12 mb-2 md:col-2 md:mb-0" style="background: #EEE;  width: 15rem; ">Unidad</label>
+        <div class="col-12 md:col-3">
+          <span class="text-sm"> {{ parametroComunSeleccionado.unidad }}  </span>
+        </div>
+      </div>
+
+      <div class="field grid mb-2">
+        <label class="col-12 mb-2 md:col-2 md:mb-0" style="background: #EEE;  width: 15rem; ">Precisión</label>
+        <div class="col-12 md:col-3">
+          <span class="text-sm">  {{ parametroComunSeleccionado.precision }}   </span>
+        </div>
+      </div>
+
+    </form>
+
+    <h4>Valores Parámetro</h4>
+
+    <p-table
+      [rows]="10"
+      [paginator]="true"
+      [showCurrentPageReport]="true"
+      [value]="this.parametroComunSeleccionado.valoresParametros.content"
+      [totalRecords]="this.parametroComunSeleccionado.valoresParametros.totalElements"
+      paginatorPosition="top"
+      selectionMode="single"
+      [(selection)]="valorParametroSeleccionado"
+      (onRowUnselect)="deSeleccionarFilarValoresParametro()"
+      [lazy]="true"
+      (onLazyLoad)="cambiarPageValoresParametro($event)"
+      [pageLinks]="1"
+      currentPageReportTemplate="Mostrando {first} de {{  this.parametroComunSeleccionado.valoresParametros.totalElements }} registros "
+
+      styleClass="p-datatable-sm p-datatable-gridlines" class="text-base">
+      <ng-template pTemplate="header">
+        <tr>
+          <button pButton type="button" class="ml-2" (click)="mostrarDetalleValoresParametro()"
+                  label="Detalles" [disabled]="this.parametroComunSeleccionado.valoresParametros.totalElements === 0 ">
+          </button>
+        </tr>
+        <tr>
+          <th>Descripción</th>
+          <th>Valor</th>
+          <th>Fecha Vigencia</th>
+          <th>Valor Máximo</th>
+          <th>Fecha Fin de Vigencia</th>
+          <th>Estado</th>
+          <th>Fecha Estado</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-valorParametro>
+        <tr [pSelectableRow]="valorParametro" (dblclick)="seleccionarParametroComunEditar(valorParametro)">
+          <td> {{ valorParametro.descripcion }}</td>
+          <td *ngIf="valorParametro.tipoValidacion !=='DI' && valorParametro.estado !== 'PPA' && valorParametro.estado !== 'EPA' && valorParametro.estado !== 'IPA' else campoVacio"> {{ valorParametro.valor }} </td>
+          <td *ngIf="valorParametro.tipoValidacion !=='DI' && valorParametro.estado !== 'PPA' && valorParametro.estado !== 'EPA' && valorParametro.estado !== 'IPA'else campoVacio"> {{ valorParametro.fechaVigencia}} </td>
+          <td *ngIf="valorParametro.tipoValidacion !=='DI' && valorParametro.estado !== 'PPA' && valorParametro.estado !== 'EPA' && valorParametro.estado !== 'IPA' else campoVacio"> {{ valorParametro.valorMaximo }} </td>
+          <td *ngIf="valorParametro.tipoValidacion !=='DI' && valorParametro.estado !== 'PPA' && valorParametro.estado !== 'EPA' && valorParametro.estado !== 'IPA' else campoVacio"> {{ valorParametro.fechaFinVigencia }}</td>
+          <td> {{ valorParametro.estado }}</td>
+          <td> {{ valorParametro.fechaEstado}}</td>
+          <ng-template #campoVacio>
+            <td></td>
+          </ng-template>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="7">No hay registros disponibles</td>
+        </tr>
+      </ng-template>
+
+    </p-table>
+  </div>
+
+
+  <ng-template pTemplate="footer">
+    <p class="campos-obligatorios text-left">Los campos marcados con asterisco (*) son obligatorios</p>
+    <hr>
+  </ng-template>
+
+
+</p-dialog>
+
+
+<!-- MOSTRAR DETALLE VALOR PARAMETRO COMUN -->
+
+<p-dialog [(visible)]="mostrarDetalleValoresParametroComun"
+          [modal]="true"
+          [style]="{width: '60%'}"
+          [baseZIndex]="10000"
+          [draggable]="false"
+          [dismissableMask]="true">
+
+  <div class="card">
+
+    <p class="text-sm">Parametro Común
+      <span style="color: #669BCD; text-transform: uppercase; ">{{ parametroComunSeleccionado.descripcion }} </span></p>
+
+
+    <div class="mt-2">
+      <button pButton type="button" label="Aprobar" class="ml-1"
+              *ngIf="perfilRequeridoAprobador()"
+              [disabled]="flagEnableBotonAprobar" (click)="updateValorParametroPorEvento('APROBAR')"></button>
+
+
+      <button pButton type="button" label="Rechazar" class="ml-1"
+              *ngIf="perfilRequeridoAprobador()"
+              [disabled]="flagEnableBotonRechazar" (click)="updateValorParametroPorEvento('RECHAZAR')"></button>
+    </div>
+
+    <div class="card mt-2">
+      <form class="formgrid" [formGroup]="formularioNuevoValorParametro">
+
+        <div class="field grid">
+          <label class="col-12 mb-2 md:col-2 md:mb-0">Descripción</label>
+          <div class="col-12 md:col-10">
+            <input id="descripcion" class="inputfield w-full" type="text"
+                   pInputText autocomplete="off" name="descripcion" formControlName="descripcion"
+                   *ngIf="crearNuevoValorParametro else mostrarSoloTexto ">
+          </div>
+          <ng-template #mostrarSoloTexto>
+            <span class="text-sm">{{  valorParametroSeleccionado.descripcion }}</span>
+          </ng-template>
+        </div>
+
+        <div class="field grid">
+          <label class="col-12 mb-2 md:col-2 md:mb-0">* Valor</label>
+          <div class="col-12 md:col-10">
+            <input id="valor" class="inputfield w-full" type="text"
+                   pInputText autocomplete="off" name="valor" formControlName="valor"
+                   [disabled]="parametroComunSeleccionado.tipoValidacion==='Aprobacion'">
+          </div>
+        </div>
+
+        <div class="field grid">
+          <label class="col-12 mb-2 md:col-2 md:mb-0">* Fecha Vigencia</label>
+          <div class="col-12 md:col-3">
+            <p-calendar [showIcon]="true" class="inputfield w-full" inputId="fecha" dateFormat="dd-mm-yy"
+                        (onInput)="validarFechas($event, 'fechaVigencia')" formControlName="fechaVigencia"
+                        [disabled]="parametroComunSeleccionado.tipoValidacion==='Aprobacion'"></p-calendar>
+          </div>
+        </div>
+
+        <div class="field grid">
+          <label class="col-12 mb-2 md:col-2 md:mb-0">Valor Máximo</label>
+          <div class="col-12 md:col-10">
+            <input id="descripcion" class="inputfield w-full" type="text"
+                   pInputText autocomplete="off" name="valorMaximo" formControlName="valorMaximo"
+                   [disabled]="parametroComunSeleccionado.tipoValidacion==='Aprobacion'">
+          </div>
+        </div>
+
+
+        <div class="field grid">
+          <label class="col-12 mb-2 md:col-2 md:mb-0">Fecha Fin Vigencia</label>
+          <div class="col-12 md:col-3">
+            <p-calendar [showIcon]="true" class="inputfield w-full" inputId="fecha" dateFormat="dd-mm-yy"
+                        (onInput)="validarFechas($event, 'fechaFinVigencia')" formControlName="fechaFinVigencia"
+                        [disabled]="parametroComunSeleccionado.tipoValidacion==='Aprobacion'"></p-calendar>
+          </div>
+        </div>
+
+        <div class="field grid">
+          <label class="col-12 mb-2 md:col-2 md:mb-0">Estado</label>
+          <div class="col-12 md:col-3">
+             <span class="text-sm" *ngIf=" crearNuevoValorParametro else mostrarSoloTextoEstado ">
+              Creado Pendiente por Aprobar
+             </span>
+
+            <ng-template #mostrarSoloTextoEstado>
+              <span class="text-sm">{{ getEstadoValorParametro(valorParametroSeleccionado.estado) }}</span>
+            </ng-template>
+
+          </div>
+        </div>
+
+        <div class="field grid">
+          <label class="col-12 mb-2 md:col-2 md:mb-0">Fecha Estado</label>
+          <div class="col-12 md:col-3">
+            <span class="text-sm" *ngIf=" crearNuevoValorParametro else mostrarSoloTextoFechaEstado ">{{fechaActual}}</span>
+            <ng-template #mostrarSoloTextoFechaEstado>
+              <span class="text-sm">{{  valorParametroSeleccionado.fechaEstado }}</span>
+            </ng-template>
+          </div>
+        </div>
+
+        <p class="campos-obligatorios text-left">Los campos marcados con asterisco (*) son obligatorios</p>
+        <hr>
+
+      </form>
+    </div>
+
+
+  </div>
+
+
+</p-dialog>

@@ -1,0 +1,246 @@
+<h1>Resultado Ejecución de Procesos</h1>
+
+<div class="card flex justify-content-center align-content-center text-center">
+  <div class="busqueda-simple" *ngIf="busquedaSimple">
+    <h4>Busqueda simple</h4>
+
+    <form [formGroup]="formularioBusquedaSimple" class="formgroup-inline">
+
+      <div class="field">
+        <select class="w-full text-color surface-overlay"
+                formControlName="selectedIndice" (change)="cambiarCampoDeBusqueda()">
+          <option *ngFor="let option of opcionesBusqueda" value="{{option.value}}">{{option.label}} </option>
+        </select>
+      </div>
+
+      <div *ngIf="buscarComoOption <= 3 " class="field">
+        <input class="inputfield w-full" id="txtBuscar" type="text"
+               pInputText formControlName="campoBuscar" autocomplete="off">
+      </div>
+
+
+      <div *ngIf="buscarComoOption === 4  || buscarComoOption === 6" class="field">
+        <p-calendar [showIcon]="true" class="inputfield w-full" inputId="fecha"
+                    formControlName="campoBuscar" dateFormat="dd-mm-yy"
+                    (onInput)="validarFechas($event, 'campoBuscar')"></p-calendar>
+      </div>
+
+
+      <div *ngIf="buscarComoOption === 5  " class="field">
+        <select id="state" class="w-full text-color surface-overlay"
+                style="appearance: auto" formControlName="campoBuscar">
+          <option *ngFor="let estado of estados"
+                  value="{{estado.value}}">{{estado.label}}
+          </option>
+        </select>
+      </div>
+
+
+      <button pButton type="submit" icon="pi pi-search" iconPos="right" label="Ir"
+              (click)="buscarPorFiltroSimple()"></button>
+
+      <button pButton type="button" id="btnBusquedaAvanzada" class="ml-1" (click)="cambiarBusqueda(false)"
+              label="Busqueda Avanzada"></button>
+
+    </form>
+  </div>
+
+
+  <div class="busqueda-avanzada" *ngIf="!busquedaSimple">
+    <h4>Busqueda avanzada</h4>
+
+    <div class="acciones-busqueda-avanzada mb-3">
+
+      <button pButton type="button" id="btnBusquedaSimple" icon="pi pi-arrow-circle-left" iconPos="left"
+              class="mr-1" (click)="cambiarBusqueda(true)" label="Volver a Busqueda simple"></button>
+
+      <button pButton type="button" icon="pi pi-search" iconPos="right" class="mr-1" label="Buscar"
+              (click)="buscarPorFiltroAvanzado()"></button>
+
+      <button pButton type="button" icon="pi pi-times-circle" iconPos="right" class="" label="Limpiar"
+              (click)="limpiarCamposFormularioBusquedaAvanzada()"></button>
+    </div>
+
+
+    <form [formGroup]="formularioBusquedaAvanzada" class="formgrid">
+
+      <div class="grid justify-content-center">
+        <div class="field col-4">
+          <label for="numero-proceso-ejecutado"> <span> *</span> Número de proceso Ejecutado </label>
+
+          <input type="text" id="numero-proceso-ejecutado" class="inputfield w-full" pInputText
+                 formControlName="numeroProcesoEjecutado" autocomplete="off">
+
+        </div>
+
+        <div class="field col-4">
+          <label for="nombre-proceso"> Nombre proceso </label>
+          <input type="text" id="nombre-proceso" class="inputfield w-full" pInputText
+                 formControlName="nombreProceso" autocomplete="off">
+        </div>
+
+        <div class="field col-4">
+          <label for="nombre-sub-proceso"> Nombre sub-proceso </label>
+          <input type="text" id="nombre-sub-proceso" class="inputfield w-full" pInputText
+                 formControlName="nombreSubproceso" autocomplete="off">
+        </div>
+
+      </div>
+
+      <div class="grid justify-content-center">
+
+        <div class="field col-4">
+          <label for="fecha-inicio" style="margin-left: 0.8rem;">Fecha Inicio </label>
+          <p-calendar [showIcon]="true" id="fecha-inicio" [style]="{'width':'25rem'}"
+                      class="w-full" formControlName="fechaInicio" dateFormat="dd-mm-yy"
+                      (onInput)="validarFechas($event, 'fechaInicio')"></p-calendar>
+        </div>
+
+        <div class="field col-4">
+          <label for="fechaFinalizacion">Fecha Finalización </label>
+          <p-calendar [showIcon]="true" id="fecha-finalizacion" [style]="{'width':'25rem'}" class="w-full" dateFormat="dd-mm-yy"
+                      formControlName="fechaFinalizacion"
+                      (onInput)="validarFechas($event, 'fechaFinalizacion')">
+          </p-calendar>
+        </div>
+
+
+        <div class="field col-4">
+          <label>Estado</label>
+
+          <select id="state" class="w-full text-color surface-overlay"
+                  style="appearance: auto" formControlName="estadoProceso">
+            <option *ngFor="let estado of estados"
+                    value="{{estado.value}}">{{estado.label}}
+            </option>
+          </select>
+        </div>
+
+      </div>
+
+    </form>
+    <br>
+
+  </div>
+
+</div>
+
+<br>
+
+
+<h4>Proceso Actual Ejecutado</h4>
+<p-table responsiveLayout="scroll" styleClass="p-datatable-gridlines p-datatable-sm"
+         [style]="{'width' : '50%'}">
+  <ng-template pTemplate="header">
+    <tr>
+      <th style="width: 10rem;">Fecha</th>
+      <th style="width: 10rem;">Mensaje</th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let product>
+    <tr>
+      <td>###</td>
+      <td>%%%%</td>
+    </tr>
+  </ng-template>
+
+  <ng-template pTemplate="emptymessage">
+    <tr>
+      <td colspan="2">No hay registros disponibles</td>
+    </tr>
+  </ng-template>
+
+</p-table>
+
+
+<br>
+<br>
+
+<h4>Información de procesos</h4>
+<div class="card flex justify-content-center align-content-center text-center">
+  <p-toast position="top-right"></p-toast>
+
+  <div class="container">
+
+
+    <button pButton type="button" (click)="desplegarDialog('subprocesos')" label="Sub-Procesos" class="mr-1"></button>
+    <button pButton type="button" (click)="desplegarDialog('errores')" label="Errores del proceso" class="mr-1"></button>
+    <button pButton type="button" (click)="desplegarDialog('logs')" label="Logs del proceso" class="mr-1"></button>
+
+  </div>
+
+
+</div>
+
+<br>
+
+<div class="tabulacion">
+
+  <div class="card justify-content-center align-content-center text-center">
+
+
+    <p-table #turboTable [value]="this.procesosEjecutados.content" (onRowUnselect)="deSeleccionarFila()"
+             sortMode="multiple" paginatorPosition="both" [scrollable]="true" scrollHeight="350px"
+             [showCurrentPageReport]="true" selectionMode="single" responsiveLayout="scroll"
+             [(selection)]="procesoSeleccionado"
+             [style]="{'text-align':'center'}"
+             [paginator]="true"
+             [rows]="10"
+             [totalRecords]="this.procesosEjecutados.totalElements"
+             [lazy]="true"
+             (onLazyLoad)="cambiarPage($event)"
+             currentPageReportTemplate="Mostrando {first} a {last} de {{this.procesosEjecutados.totalElements}} registros"
+             styleClass="p-datatable-gridlines">
+      <ng-template pTemplate="header">
+        <!-- <tr style="background: #FFF ; display: flex;
+         flex-wrap: wrap;
+         justify-content: center;" >
+           <select id="state" class="text-sm text-color surface-overlay"
+           style="appearance: auto" formControlName="estadoProceso">
+             <option *ngFor="let estado of estados"
+             value="{{estado.value}}">{{estado.label}}
+             </option>
+           </select>
+         </tr>-->
+        <tr>
+          <th pSortableColumn="numeroProcesoEjecutado">Número de proceso Ejecutado
+            <p-sortIcon field="numeroProcesoEjecutado"></p-sortIcon>
+          </th>
+          <th pSortableColumn="nombreProceso">Nombre Proceso
+            <p-sortIcon field="nombreProceso"></p-sortIcon>
+          </th>
+
+          <th pSortableColumn="nombreSubproceso">Nombre Subproceso
+            <p-sortIcon field="nombreSubproceso"></p-sortIcon>
+          </th>
+
+          <th pSortableColumn="fechaInicio">Fecha Inicio
+            <p-sortIcon field="fechaInicio"></p-sortIcon>
+          </th>
+
+          <th pSortableColumn="estadoProceso">Estado
+            <p-sortIcon field="estadoProceso"></p-sortIcon>
+          </th>
+
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-proceso>
+        <tr [pSelectableRow]="proceso">
+          <td>{{proceso.numeroProcesoEjecutado}}</td>
+          <td>{{proceso.nombreProceso}}</td>
+          <td>{{proceso.nombreSubproceso}}</td>
+          <td>{{proceso.fechaInicio}}</td>
+          <td>{{proceso.estadoProceso}}</td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="5">No hay registros disponibles</td>
+        </tr>
+      </ng-template>
+
+    </p-table>
+  </div>
+</div>
+

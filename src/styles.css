@@ -1,0 +1,507 @@
+html,
+body {
+  font-family: 'Roboto' !important;
+}
+
+
+.p-component {
+  font-family: "Roboto", Arial, sans-serif !important;
+  font-weight: normal !important;
+}
+
+h1 {
+  font-family: "Roboto", Arial, sans-serif !important;
+  font-weight: normal;
+  color: #333;
+  position: relative;
+  padding-bottom: 6px;
+  margin-bottom: 1.8rem !important;
+  font-size: 25px;
+  line-height: 1.1em !important;
+  position: relative;
+}
+
+
+h1:after {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 80px;
+  height: 1px;
+  background-color: #CCCCCC;
+  content: "";
+}
+
+h2 {
+  font-family: "Roboto", Arial, sans-serif !important;
+  font-weight: normal;
+  color: #911B28;
+  position: relative;
+  font-size: 20px;
+  line-height: 1.1em !important;
+  position: relative;
+}
+
+h2:after {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 80px;
+  height: 1px;
+}
+
+h3 {
+  font-family: "Roboto", Arial, sans-serif !important;
+  font-weight: normal;
+  color: #333;
+  position: relative;
+  font-size: 12px;
+  line-height: 1.1em !important;
+  position: relative;
+}
+
+
+h4 {
+  font-family: "Roboto", Arial, sans-serif !important;
+  font-weight: 600;
+  color: #333;
+  position: relative;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  font-size: 12px;
+  line-height: 1.1em !important;
+  position: relative;
+}
+
+
+/* CARD O TARJETAS */
+
+.card {
+  height: auto;
+  width: auto;
+  padding-bottom: 10px;
+}
+
+
+/* -- P-BUTTON STYLES */
+.p-button {
+  background: #911B28 !important;
+  font-family: "Roboto", Arial, sans-serif !important;
+  font-size: 12px !important;
+  border-radius: 0px !important;
+  color: #fff !important;
+  border: 1px solid #911B28 !important;
+  border-color: 1px solid #911B28 !important;
+  height: 27px !important;
+  text-transform: uppercase !important;
+  padding: 0.4rem 1rem !important;
+}
+
+.p-button:enabled:hover {
+  background: #631120 !important;
+  color: #FFFFFF !important;
+}
+
+.p-button:focus {
+  outline: 0 none;
+  outline-offset: 0;
+  box-shadow: none;
+}
+
+.p-button.p-button-icon-only {
+  height: 30px !important;
+}
+
+
+/* DATATABLES STYLES */
+
+.p-datatable-tbody {
+  font-size: 13px;
+}
+
+.p-datatable .p-datatable-tbody > tr.p-highlight {
+  border-radius: 0px !important;
+  background: #8BB9DC;
+  color: #495057;
+}
+
+.p-datatable .p-datatable-tbody > tr:focus {
+  outline: 0.15rem solid #8BB9DC;
+  outline-offset: 0.15rem;
+}
+
+.p-datatable-scrollable > .p-datatable-wrapper >
+.p-datatable-table > .p-datatable-thead,
+.p-datatable-scrollable >
+.p-datatable-wrapper >
+.p-datatable-virtual-scrollable-body >
+.cdk-virtual-scroll-content-wrapper >
+.p-datatable-table > .p-datatable-thead {
+  z-index: 0 !important;
+}
+
+/* PAGINATOR OF DATATABLES STYLES */
+
+.p-paginator {
+  font-size: 14px;
+}
+
+.p-paginator .p-paginator-pages .p-paginator-page {
+  border-radius: 5px;
+  /* padding: 0.1875rem 0.625rem;*/
+}
+
+.p-paginator .p-paginator-pages .p-paginator-page.p-highlight {
+  background: #003E6C;
+  color: #FFFFFF;
+}
+
+.pi-chevron-down, .pi-angle-down, .pi-angle-right,
+.pi-chevron-right {
+  color: #003E6C !important;
+}
+
+
+/* DROPDOWNS STYLES */
+.p-dropdown {
+  border-radius: 0px !important;
+  line-height: 10px;
+  height: 30px;
+}
+
+/* INPUT-TEXT STYLES */
+.p-inputtext {
+  border-radius: 0px !important;
+  height: 30px;
+}
+
+/*P-DATEPICKER STYLES*/
+.p-datepicker table td {
+  padding: 4px 5px 0px;
+}
+
+.p-datepicker table td > span {
+  width: 30px;
+  height: 20px;
+  font-size: 16px !important;
+  border-radius: 0px;
+}
+
+
+.p-datepicker table td > span.p-highlight {
+  background: #8BB9DC;
+}
+
+
+/* P-DIALOG STYLES*/
+.p-dialog .p-dialog-header .p-dialog-header-icon {
+  background: #911B28;
+  color: #FFFFFF;
+}
+
+.p-dialog .p-dialog-header .p-dialog-header-icon:enabled:hover {
+  background: #631120;
+  color: #FFFFFF;
+}
+
+.p-link:focus {
+  outline: 0 none;
+  outline-offset: 0;
+  box-shadow: none;
+}
+
+
+/* P - RADIOBUTTON STYLES */
+
+.p-radiobutton .p-radiobutton-box {
+  width: 15px;
+  height: 15px;
+}
+
+.p-radiobutton .p-radiobutton-box.p-highlight {
+  border-color: #911B28 !important;
+  background: #911B28 !important;
+}
+
+.p-radiobutton .p-radiobutton-box:not(.p-disabled):not(.p-highlight):hover {
+  border-color: #631120 !important;
+}
+
+
+.p-radiobutton-label {
+  margin-left: 0px;
+}
+
+.p-radiobutton .p-radiobutton-box .p-radiobutton-icon {
+  width: 9px !important;
+  height: 9px !important;
+}
+
+.p-datatable .p-datatable-thead > tr > th {
+  text-align: center !important;
+  justify-content: center;
+  color: black;
+  font-weight: 500;
+}
+
+.p-datatable .p-datatable-tbody > tr > td {
+  text-align: center !important;
+  justify-content: center;
+  color: black;
+}
+
+/* CHECKBOX STYLES */
+.p-checkbox .p-checkbox-box .p-checkbox-icon {
+  font-size: 10px;
+}
+
+.p-checkbox .p-checkbox-box {
+  width: 15px;
+  height: 15px;
+}
+
+.list-group {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  padding-left: 0;
+  margin-bottom: 0;
+}
+
+.list-group-item {
+  position: relative;
+  display: flex;
+  margin-bottom: -1px;
+}
+
+.list-group-flush .list-group-item {
+  border-right: 0;
+  border-left: 0;
+  border-radius: 0;
+}
+
+.lbl-info-proceso {
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 1px;
+  padding: 8px 10px !important;
+  background: #EEE;
+}
+
+.lbl-info-proceso-definicion {
+  font-size: 1rem;
+  font-weight: 500;
+  letter-spacing: 1px;
+  padding: 8px 10px !important;
+  background: #EEE;
+}
+
+.list-group-item > .lbl-info-proceso {
+  width: 200px;
+}
+
+.list-group-item > .lbl-info-proceso-definicion {
+  width: 19rem;
+}
+
+
+.lbl-info-proceso > .mt-2 {
+  margin-top: 0.6rem !important;
+}
+
+
+/* MENU-ITEM  #EEE !important */
+
+
+.p-panelmenu .p-menuitem-text {
+  font-size: 15px !important;
+}
+
+
+.p-panelmenu .p-panelmenu-header > a {
+  font-weight: normal;
+}
+
+.p-panelmenu .p-panelmenu-header > a:focus {
+  box-shadow: none;
+}
+
+
+.p-panelmenu .p-panelmenu-content .p-menuitem .p-menuitem-link:focus {
+  box-shadow: none;
+  background-color: #aba9a878;
+}
+
+.p-panelmenu .p-panelmenu-content .p-menuitem .p-menuitem-link:hover {
+  box-shadow: none;
+}
+
+/* TOAST
+
+.p-toast {
+  opacity: 1 !important;
+}
+
+.p-toast .p-toast-message.p-toast-message-error {
+  background: #FFFFFF;
+  border: solid #003E6C;
+  color: #73000c;
+}*/
+
+.p-toast .p-toast-message .p-toast-icon-close {
+  width: 0rem !important;
+}
+
+.ui-message-icon {
+  display: none;
+}
+
+
+/*Button success*/
+
+.p-button.p-button-success:enabled:focus,
+.p-buttonset.p-button-success > .p-button:enabled:focus,
+.p-splitbutton.p-button-success > .p-button:enabled:focus {
+  box-shadow: 0 0 0 0rem #631120;
+}
+
+/*SELECTS HTML*/
+select {
+  font-family: 'Roboto';
+  border-color: #ced4da;
+  font-size: 13px !important;
+  border-radius: 0px !important;
+  height: 30px;
+}
+
+select:focus-visible {
+  outline-offset: 0px;
+  outline: none;
+}
+
+
+.p-dialog .p-dialog-footer button {
+  margin: 0rem;
+}
+
+.p-datatable .p-sortable-column .p-sortable-column-icon {
+  margin-left: 0px !important;
+}
+
+.pi-fw {
+  width: 0.70em !important;
+}
+
+.p-datatable-resizable
+.p-datatable-thead > tr > th,
+.p-datatable-resizable .p-datatable-tfoot > tr > td,
+.p-datatable-resizable .p-datatable-tbody > tr > td {
+  white-space: normal !important;
+
+}
+
+.p-dialog .p-dialog-header .p-dialog-title {
+  font-family: "Roboto", Arial, sans-serif !important;
+  font-weight: 500;
+  color: #333;
+  position: relative;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  font-size: 13px;
+  line-height: 1.1em !important;
+  position: relative;
+}
+
+
+.p-datatable-sm {
+  font-size: 13px !important;
+}
+
+.p-datatable.p-datatable-sm .p-datatable-thead > tr > th {
+  padding: 0.1rem;
+}
+
+label {
+  font-size: 13px !important;
+}
+
+.p-datatable.p-datatable-sm .p-datatable-tbody > tr > td {
+  padding: 0.2rem;
+}
+
+/*ESTILOS DEL PAGINADOR*/
+
+.p-paginator {
+  border: none !important;
+}
+
+.p-paginator .p-paginator-pages .p-paginator-page.p-highlight {
+  font-size: 13px !important;
+}
+
+
+.p-paginator .p-paginator-pages .p-paginator-page, .p-paginator .p-paginator-first, .p-paginator .p-paginator-prev,
+.p-paginator .p-paginator-next, .p-paginator .p-paginator-last {
+  height: 2.1rem !important;
+  min-width: 2.1rem !important;
+}
+
+
+/*CAMPOS INPUTS*/
+input {
+  font-size: 13px !important;
+}
+
+.p-datepicker table {
+  font-size: 13px !important;
+}
+
+.p-datepicker table td > span {
+  font-size: 13px !important;
+}
+
+.p-datepicker .p-monthpicker .p-monthpicker-month {
+  font-size: 13px !important;
+}
+
+.p-datepicker .p-datepicker-header .p-datepicker-title .p-datepicker-month {
+  font-size: 13px !important;
+}
+
+.p-datepicker-year, .p-yearpicker-year, .p-datepicker-header {
+  font-size: 13px !important;
+}
+
+.p-datatable-thead > tr > th {
+  font-size: 13px !important;
+  padding: 0.1rem !important;
+}
+
+.p-datatable .p-datatable-tbody > tr > td {
+  padding: 0.2rem !important;
+}
+
+.p-dialog .p-dialog-content {
+  padding: 0 1rem 4rem !important;
+}
+
+.p-datepicker .p-monthpicker .p-monthpicker-month, .p-datepicker-header {
+  padding: 0.3rem !important;
+}
+
+.campos-obligatorios {
+  font-size: 13px !important;
+}
+
+
+.p-dialog-header {
+  padding: 0.5rem !important;
+}
+
+.text-sm {
+  font-size: 13px !important;
+}

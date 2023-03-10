@@ -1,0 +1,709 @@
+<h1>Ejecución de procesos </h1>
+
+<div class="flex justify-content-center mb-2">
+  <button pButton type="button" class="ml-2" label="Nuevo Ejecución de Procesos"
+          (click)="crearNuevaEjecucionProceso()"></button>
+
+  <!-- Cuando el estado está en pausado se activan estos botones-->
+  <button *ngIf="activarBotonContinuar()" pButton type="button"
+          class="ml-2" label="Deshacer"></button>
+
+  <button *ngIf="activarBotonContinuar()" pButton type="button"
+          class="ml-2" label="Continuar"></button>
+
+  <button *ngIf="activarBotonContinuar()" pButton type="button"
+          class="ml-2" label="Cancelar"></button>
+
+
+  <button *ngIf="activarBotonGrabar()" pButton type="button" class="ml-2" label="Grabar"
+          (click)="guardarNuevaEjecucionProceso()"></button>
+
+
+  <button *ngIf="activarBotonEliminar()" pButton type="button" class="ml-2" label="Eliminar"
+          (click)="eliminarEjecucionProceso(procesoEjecutadoResponse.content[0].consecutivo)"></button>
+
+
+  <button *ngIf="activarBotonEjecutar()" pButton type="button" class="ml-2" label="Ejecutar"
+          (click)="ejecutarEjecucionProceso(procesoEjecutadoResponse.content[0].consecutivo)"></button>
+
+  <button *ngIf="activarBotonEjecucionAutomatica()" pButton type="button" class="ml-2" label="Ejecución automática" [disabled]="true"></button>
+
+  <button *ngIf="activarBotonCerrarDia()" pButton type="button" class="ml-2" label="Cerrar Dia" [disabled]="true"></button>
+
+</div>
+
+<div class="card flex justify-content-center align-content-center text-center">
+  <!-- FORMULARIO BUSQUEDA SIMPLE -->
+  <div class="busqueda-simple" *ngIf="busquedaSimple">
+    <h4>Busqueda Simple</h4>
+
+    <form [formGroup]="formularioBusquedaSimple" class="formgroup-inline font-normal">
+
+      <div class="field">
+        <select class="w-full text-color surface-overlay"
+                formControlName="selectedIndice" (change)="cambiarCampoDeBusqueda()">
+          <option *ngFor="let option of opciones" value="{{option.value}}">{{option.label}} </option>
+        </select>
+      </div>
+
+      <div class="field" [ngSwitch]="campoBusqueda">
+
+
+        <div *ngSwitchCase="1">
+
+          <input class="inputfield w-full" id="txtBuscar" type="text" pInputText
+                 formControlName="campoBuscar" autocomplete="off">
+        </div>
+
+        <div *ngSwitchCase="2" class="col-12">
+          <div class="col-12">
+            <p-radioButton name="campoBuscar" formControlName="campoBuscar" class=" mr-2" value="TO" label="Todo"></p-radioButton>
+            <p-radioButton name="campoBuscar" formControlName="campoBuscar" class=" mr-2" value="PS" label="Por sucursal"></p-radioButton>
+            <p-radioButton name="campoBuscar" formControlName="campoBuscar" class=" mr-2" value="CE" label="Créditos especificos"></p-radioButton>
+            <p-radioButton name="campoBuscar" formControlName="campoBuscar" class=" mr-2" value="LC" label="Linea crédito"></p-radioButton>
+          </div>
+
+          <div class="col-12">
+            <p-radioButton name="campoBuscar" formControlName="campoBuscar" class=" mr-2" value="TN" label="Tipo nómina"></p-radioButton>
+            <p-radioButton name="campoBuscar" formControlName="campoBuscar" class=" mr-2" value="TL" label="Tipo liquidacion"></p-radioButton>
+            <p-radioButton name="campoBuscar" formControlName="campoBuscar" class=" mr-2" value="CC" label="Centro de Costo"></p-radioButton>
+          </div>
+        </div>
+
+        <div *ngSwitchCase="3">
+          <p-calendar [showIcon]="true" class="inputfield w-full" inputId="fecha-inicio"
+                      formControlName="campoBuscar" dateFormat="dd-mm-yy"
+                      (onInput)="validarFechas($event, 'campoBuscar')"></p-calendar>
+        </div>
+
+
+        <div *ngSwitchCase="4">
+          <div class="field">
+            <select class="w-full  text-color surface-overlay" style="appearance: auto"
+                    formControlName="campoBuscar">
+              <option *ngFor="let option of estados" value="{{option.value}}">{{option.label}} </option>
+            </select>
+          </div>
+        </div>
+
+
+        <div *ngSwitchCase="5">
+
+          <select class="w-full  text-color surface-overlay" style="appearance: auto"
+                  formControlName="campoBuscar">
+            <option *ngFor="let option of lineasCredito" value="{{option.value}}">{{option.label}} </option>
+          </select>
+
+        </div>
+
+        <div *ngSwitchCase="6">
+          <select class="w-full  text-color surface-overlay" style="appearance: auto"
+                  formControlName="campoBuscar">
+            <option *ngFor="let option of tipoLiquidacion" value="{{option.value}}">{{option.label}} </option>
+          </select>
+        </div>
+
+        <div *ngSwitchCase="7">
+          <select class="w-full  text-color surface-overlay" style="appearance: auto"
+                  formControlName="campoBuscar">
+            <option *ngFor="let option of tipoNomina" value="{{option.value}}">{{option.label}} </option>
+          </select>
+        </div>
+
+        <div *ngSwitchCase="8">
+          <select class="w-full  text-color surface-overlay" style="appearance: auto"
+                  formControlName="campoBuscar">
+            <option *ngFor="let option of centroCosto" value="{{option.value}}">{{option.label}} </option>
+          </select>
+        </div>
+
+      </div>
+
+
+      <button pButton type="submit" icon="pi pi-search" iconPos="right" label="Ir"
+              (click)="buscarPorFiltroSimple()"></button>
+
+      <button pButton type="button" id="btnBusquedaAvanzada" class="ml-1" (click)="cambiarBusqueda(false)"
+              label="Busqueda Avanzada"></button>
+
+    </form>
+
+  </div>
+
+
+  <!-- FORMULARIO BUSQUEDA AVANZADA -->
+
+  <div class="busqueda-avanzada" *ngIf="!busquedaSimple" style="width: 100%;">
+    <h4>Busqueda avanzada</h4>
+
+    <div class="mb-3">
+
+      <button pButton type="button" id="btnBusquedaSimple" icon="pi pi-arrow-circle-left" iconPos="left" class="mr-1"
+              (click)="cambiarBusqueda(true)" label="Volver a Busqueda simple"></button>
+
+      <button pButton type="button" icon="pi pi-search" iconPos="right" class="mr-1" label="Buscar"
+              (click)="buscarPorFiltroAvanzado()"></button>
+
+      <button pButton type="button" icon="pi pi-times-circle" iconPos="right" class="" label="Limpiar"
+              (click)="limpiarCamposFormularioBusquedaAvanzada()"></button>
+    </div>
+
+
+    <form [formGroup]="formularioBusquedaAvanzada" class="formgrid">
+
+      <div class="grid justify-content-center">
+
+        <div class="field col-4">
+          <label for="numeroProceso">Número Proceso</label>
+          <input class="inputfield w-full" type="text" pInputText
+                 autocomplete="off" formControlName="numeroProceso">
+        </div>
+
+        <div class="field col-4">
+          <label for="fechaEjecucion">Fecha Ejecución</label>
+
+          <p-calendar [showIcon]="true" [style]="{'width':'25rem'}" class="w-full"
+                      inputId="fechaEjecucion" dateFormat="dd-mm-yy" formControlName="fechaEjecucion"
+                      (onInput)="validarFechas($event, 'fechaEjecucion')"></p-calendar>
+        </div>
+
+
+        <div class="field  col-4">
+          <label for="estado">Estado</label>
+
+          <select class="w-full  text-color surface-overlay"
+                  style="appearance: auto" formControlName="estado">
+
+            <option *ngFor="let estado of estados"
+                    value="{{estado.value}}">{{estado.label}}
+            </option>
+          </select>
+
+        </div>
+
+      </div>
+
+      <div class="grid">
+        <div class="col-12 mt-2">
+          <label>Criterio Cobertura </label>
+          <div class="my-3">
+            <div class="col-12">
+              <p-radioButton formControlName="criterioCobertura" class=" mr-2" value="TO" label="Todo"></p-radioButton>
+              <p-radioButton formControlName="criterioCobertura" class=" mr-2" value="PS" label="Por sucursal"></p-radioButton>
+              <p-radioButton formControlName="criterioCobertura" class=" mr-2" value="CE" label="Créditos especificos"></p-radioButton>
+              <p-radioButton formControlName="criterioCobertura" class=" mr-2" value="LC" label="Linea crédito"></p-radioButton>
+
+              <p-radioButton formControlName="criterioCobertura" class=" mr-2" value="TN" label="Tipo nómina"></p-radioButton>
+              <p-radioButton formControlName="criterioCobertura" class=" mr-2" value="TL" label="Tipo liquidacion"></p-radioButton>
+              <p-radioButton formControlName="criterioCobertura" class=" mr-2" value="CC" label="Centro de Costo"></p-radioButton>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+    </form>
+    <br>
+
+  </div>
+
+</div>
+
+
+<ng-template [ngIf]="busquedaConResultados">
+
+
+  <ng-template [ngIf]="nuevaEjecucionProcesos">
+
+    <div class="list-group list-group-flush">
+
+      <div class="mt-1 ml-2 list-group-item">
+        <label class="lbl-info-proceso"> Criterio de Cobertura: </label>
+        <span class="pl-2 mt-2">
+                <p-radioButton name="criterioCobertura" class="mr-2 " value="TO" label="Todo"
+                               [(ngModel)]="this.nuevaEjecucionProcesoAGuardar.criterioCobertura" (onClick)="cargarCamposCriteriosCobertura('Todo')"></p-radioButton>
+
+              <p-radioButton name="criterioCobertura" class="mr-2 " value="PS" label="Por sucursal"
+                             [(ngModel)]="this.nuevaEjecucionProcesoAGuardar.criterioCobertura" (onClick)="cargarCamposCriteriosCobertura('PorSucursal')"></p-radioButton>
+
+              <p-radioButton name="criterioCobertura" class="mr-2 " value="CE"
+                             label="Créditos especificos" [(ngModel)]="this.nuevaEjecucionProcesoAGuardar.criterioCobertura" (onClick)="cargarCamposCriteriosCobertura('CreditosEspecificos')"></p-radioButton>
+
+              <p-radioButton name="criterioCobertura" class="mr-2 " value="LC" label="Linea crédito"
+                             [(ngModel)]="this.nuevaEjecucionProcesoAGuardar.criterioCobertura" (onClick)="cargarCamposCriteriosCobertura('LineaCredito')"></p-radioButton>
+
+              <p-radioButton name="criterioCobertura" class="mr-2 " value="TN" label="Tipo nómina"
+                             [(ngModel)]="this.nuevaEjecucionProcesoAGuardar.criterioCobertura" (onClick)="cargarCamposCriteriosCobertura('TipoNomina')"></p-radioButton>
+
+              <p-radioButton name="criterioCobertura" class="mr-2 " value="TL"
+                             label="Tipo liquidacion" [(ngModel)]="this.nuevaEjecucionProcesoAGuardar.criterioCobertura" (onClick)="cargarCamposCriteriosCobertura('TipoLiquidacion')"></p-radioButton>
+
+              <p-radioButton name="criterioCobertura" class="mr-2 " value="CC" label="Centro de Costo"
+                             [(ngModel)]="this.nuevaEjecucionProcesoAGuardar.criterioCobertura" (onClick)="cargarCamposCriteriosCobertura('CentroCosto')"></p-radioButton>
+            </span>
+      </div>
+
+      <div class="mt-1 ml-2 list-group-item">
+        <label class="lbl-info-proceso"> Fecha de Ejecucion: </label>
+        <span class="pl-2 mt-2">
+          {{this.nuevaEjecucionProcesoAGuardar.fechaInicio}}
+        </span>
+      </div>
+
+      <div class="mt-1 ml-2 list-group-item">
+        <label class="lbl-info-proceso">Estado: </label>
+        <span class="pl-2 mt-2">
+        DEFINIDO
+        </span>
+      </div>
+    </div>
+
+    <br>
+    <br>
+
+    <div [ngSwitch]="valorCriterioCoberturaACargar">
+
+      <div *ngSwitchCase="'PorSucursal'">
+        <div class="formgroup-inline">
+          <div class="field col-3">
+            <label>* Sucursal Inicial </label>
+
+            <select class="w-full  text-color surface-overlay"
+                    style="appearance: auto" [(ngModel)]="this.nuevaEjecucionProcesoAGuardar.sucursalInicioCodigoLocalidad">
+              <option *ngFor="let option of sucursales" value="{{option.value}}">{{option.label}} </option>
+            </select>
+          </div>
+
+          <div class="field col-3">
+            <label>* Sucursal Final </label>
+
+            <select class="w-full  text-color surface-overlay"
+                    style="appearance: auto" [(ngModel)]="this.nuevaEjecucionProcesoAGuardar.sucursalFinCodigoLocalidad">
+              <option *ngFor="let option of sucursales" value="{{option.value}}">{{option.label}} </option>
+            </select>
+          </div>
+
+        </div>
+      </div>
+
+      <div *ngSwitchCase="'CreditosEspecificos'">
+        <button pButton type="button" class="ml-2" label="Agregar Nuevo Registro"
+                (click)="showDialogCreditosEspecificos()"></button>
+      </div>
+
+      <div *ngSwitchCase="'LineaCredito'">
+        <label>* Líneas Crédito</label>
+
+        <div class="field col-6">
+          <select class="w-full  text-color surface-overlay"
+                  style="appearance: auto" [(ngModel)]="this.nuevaEjecucionProcesoAGuardar.lineaCredito">
+            <option *ngFor="let option of lineasCredito" value="{{option.value}}">{{option.label}} </option>
+          </select>
+        </div>
+      </div>
+
+      <div *ngSwitchCase="'TipoNomina'">
+        <label>* Tipo Nómina</label>
+        <div class="field col-3">
+          <select class="w-full  text-color surface-overlay"
+                  style="appearance: auto" [(ngModel)]="this.nuevaEjecucionProcesoAGuardar.tipoNominaConsecutivo">
+            <option *ngFor="let option of tipoNomina" value="{{option.value}}">{{option.label}} </option>
+          </select>
+        </div>
+      </div>
+
+      <div *ngSwitchCase="'TipoLiquidacion'">
+        <label>* Tipo Liquidación</label>
+
+        <div class="field col-3">
+          <select class="w-full  text-color surface-overlay"
+                  style="appearance: auto" [(ngModel)]="this.nuevaEjecucionProcesoAGuardar.tipoLiquidacionTipoCodigo">
+            <option *ngFor="let option of tipoLiquidacion" value="{{option.value}}">{{option.label}} </option>
+          </select>
+        </div>
+
+      </div>
+
+      <div *ngSwitchCase="'CentroCosto'">
+        <label>* Centro costo</label>
+
+        <div class="field col-3">
+          <select class="w-full  text-color surface-overlay"
+                  style="appearance: auto" [(ngModel)]="this.nuevaEjecucionProcesoAGuardar.centroCostoCodigo">
+            <option *ngFor="let option of centroCosto" value="{{option.value}}">{{option.label}} </option>
+          </select>
+        </div>
+      </div>
+
+    </div>
+
+
+  </ng-template>
+
+
+  <div class="card  mt-2 " *ngIf="!nuevaEjecucionProcesos">
+
+    <p-paginator #paginador [rows]="1" [totalRecords]="totalElements"
+                 currentPageReportTemplate="{{currentPage}} de {{ totalElements }}"
+                 [showCurrentPageReport]="true"
+                 [pageLinkSize]="1" (onPageChange)="cambiarProceso($event)"></p-paginator>
+
+    <div class="list-group list-group-flush">
+      <div class="ml-2 list-group-item">
+        <label class="lbl-info-proceso"> Número de Proceso: </label>
+        <span class="pl-2 mt-2" *ngIf="procesoEjecutadoResponse.content.length >=1">
+          {{ procesoEjecutadoResponse.content[0].consecutivo }}
+        </span>
+      </div>
+      <div class="ml-2 list-group-item">
+        <label class="lbl-info-proceso"> Criterio de Cobertura:</label>
+        <span class="pl-2 mt-2" *ngIf="procesoEjecutadoResponse.content.length >=1">
+                <p-radioButton name="criterioCobertura" class="mr-2 " value="Todo" label="Todo"
+                               [(ngModel)]="selectedValue" [disabled]="deshabilitarRadios()"></p-radioButton>
+
+                <p-radioButton name="criterioCobertura" class="mr-2 " value="Por Sucursal" label="Por sucursal"
+                               [(ngModel)]="selectedValue" [disabled]="deshabilitarRadios()"></p-radioButton>
+
+                <p-radioButton name="criterioCobertura" class="mr-2 " value="Créditos Específicos"
+                               label="Créditos especificos" [(ngModel)]="selectedValue"
+                               [disabled]="deshabilitarRadios()"></p-radioButton>
+
+                <p-radioButton name="criterioCobertura" class="mr-2 " value="Líneas Crédito" label="Linea crédito"
+                               [(ngModel)]="selectedValue" [disabled]="deshabilitarRadios()"></p-radioButton>
+
+                <p-radioButton name="criterioCobertura" class="mr-2 " value="Tipo Nómina" label="Tipo nómina"
+                               [(ngModel)]="selectedValue" [disabled]="deshabilitarRadios()"></p-radioButton>
+
+                <p-radioButton name="criterioCobertura" class="mr-2 " value="Tipo Liquidación"
+                               label="Tipo liquidacion" [(ngModel)]="selectedValue"
+                               [disabled]="deshabilitarRadios()"></p-radioButton>
+
+                <p-radioButton name="criterioCobertura" class="mr-2 " value="Centro de Costo" label="Centro de Costo"
+                               [(ngModel)]="selectedValue" [disabled]="deshabilitarRadios()"></p-radioButton>
+            </span>
+      </div>
+
+      <div class="ml-2 list-group-item">
+        <label class="lbl-info-proceso"> Fecha de Ejecucion: </label>
+        <span class="pl-2 mt-2" *ngIf="procesoEjecutadoResponse.content.length >=1">
+          {{ procesoEjecutadoResponse.content[0].fechaInicio }}
+        </span>
+      </div>
+
+      <div class="ml-2 list-group-item">
+        <label class="lbl-info-proceso">Estado: </label>
+        <span class="pl-2 mt-2" *ngIf="procesoEjecutadoResponse.content.length >=1">
+          {{  procesoEjecutadoResponse.content[0].estado.split("-")[0] }}
+        </span>
+      </div>
+
+
+      <div *ngIf="procesoEjecutadoResponse.content.length >=1">
+
+        <!-- Avalua si el criterio de cobertura no es vacio-->
+        <div class="mt-1 ml-2 list-group-item"
+             *ngIf="procesoEjecutadoResponse.content[0].sucursalInicio!=undefined">
+          <label class="lbl-info-proceso">
+            Sucursal Inicio :
+          </label>
+          <span class="pl-2 mt-2">
+            {{procesoEjecutadoResponse.content[0].sucursalInicio}}
+          </span>
+
+          <label class="lbl-info-proceso ml-3">
+            Sucursal Final :
+          </label>
+          <span class="pl-2 mt-2">
+            {{procesoEjecutadoResponse.content[0].sucursalFin}}
+          </span>
+
+        </div>
+
+        <div class="mt-1 ml-2 list-group-item"
+             *ngIf="procesoEjecutadoResponse.content[0].lineaCredito!==null">
+          <label class="lbl-info-proceso">
+            Lineas Crédito
+          </label>
+          <span class="pl-2 mt-2">
+            {{procesoEjecutadoResponse.content[0].lineaCredito}}
+          </span>
+        </div>
+
+        <div class="mt-1 ml-2 list-group-item"
+             *ngIf="procesoEjecutadoResponse.content[0].tipoLiquidacion!=null">
+          <label class="lbl-info-proceso">
+            Tipo Liquidacion
+          </label>
+          <span class="pl-2 mt-2">
+            {{procesoEjecutadoResponse.content[0].tipoLiquidacion}}
+          </span>
+        </div>
+
+        <div class="mt-1 ml-2 list-group-item"
+             *ngIf="procesoEjecutadoResponse.content[0].centroCosto != null">
+          <label class="lbl-info-proceso">
+            Centro Costo
+          </label>
+          <span class="pl-2 mt-2">
+            {{procesoEjecutadoResponse.content[0].centroCosto}}
+          </span>
+        </div>
+
+        <div class="mt-1 ml-2 list-group-item"
+             *ngIf="procesoEjecutadoResponse.content[0].tipoNomina != null">
+          <label class="lbl-info-proceso">
+            Tipo Nomina
+          </label>
+          <span class="pl-2 mt-2">
+            *{{procesoEjecutadoResponse.content[0].tipoNomina}}*
+          </span>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+
+  <div class="card mt-3">
+
+    <div class="creditos-proceso" *ngIf="mostrarCreditosSeleccionados()">
+      <h4>Créditos por Proceso</h4>
+
+      <div class="card">
+
+        <button pButton type="button" class="ml-2" label="Agregar Nuevo Registro"
+                (click)="showDialogCreditosEspecificos()" *ngIf="validarBotonAgregarNuevoRegistro()"></button>
+        <br>
+        <p-table responsiveLayout="scroll" [value]="creditosSeleccionados.content"
+                 styleClass="p-datatable-sm p-datatable-gridlines"
+                 [paginator]="true"
+                 [rows]="10"
+                 [showCurrentPageReport]="true"
+                 responsiveLayout="scroll"
+                 sortMode="multiple"
+                 paginatorPosition="top"
+                 [lazy]="true"
+                 (onLazyLoad)="cambiarPageCreditos($event)"
+                 [totalRecords]="this.creditosSeleccionados.totalElements"
+                 currentPageReportTemplate="Mostrando {first} de {{this.creditosSeleccionados.totalElements}} registros " class="text-base">
+          <ng-template pTemplate="header">
+            <tr>
+              <th pSortableColumn="numeroCredito">Crédito
+                <p-sortIcon field="numeroCredito"></p-sortIcon>
+              </th>
+              <th>Eliminar?</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-credito>
+            <tr>
+              <td>{{credito.numeroCredito}}</td>
+              <td>
+                <button pButton type="button" icon="pi pi-trash"
+                        iconPos="left" (click)="eliminarCredito(credito.creditosConsecutivo)"
+                        [disabled]="activarBotonEliminarCredito()"></button>
+              </td>
+            </tr>
+          </ng-template>
+
+          <ng-template pTemplate="emptymessage">
+            <tr>
+              <td colspan="2">No hay registros disponibles</td>
+            </tr>
+          </ng-template>
+
+        </p-table>
+      </div>
+
+    </div>
+
+
+    <ng-template [ngIf]="activarBotonContinuar()">
+
+      <div class="card mt-3">
+        <h4> DESHACER EJECUCIÓN PROCESOS</h4>
+
+        <label class="lbl-info-proceso"> Deshacer:</label>
+
+        <span class="pl-2 mt-2">
+
+      <p-radioButton name="criteriosDeshacer" class="mr-2 " value="Todo" label="Todo"
+                     [(ngModel)]="deshacerCriterioCobertura"></p-radioButton>
+
+      <p-radioButton name="criterioCobertura" class="mr-2 " value="Créditos Específicos"
+                     label="Créditos especificos" [(ngModel)]="deshacerCriterioCobertura"></p-radioButton>
+
+    </span>
+
+      </div>
+
+
+      <ng-template [ngIf]="deshacerCriterioCobertura === 'Créditos Específicos'">
+        <!--CREDITOS POR PROCESO-->
+        <h4>Creditos por proceso </h4>
+
+        <div>
+          <a class="cursor-pointer underline" onMouseOver="this.style.color='#8BB9DC'"
+             onMouseOut="this.style.color='#000'" (click)="seleccionarTodoCreditosPorProceso()">Seleccionar Todo</a> |
+          <a class="cursor-pointer underline ml-2" onMouseOver="this.style.color='#8BB9DC'"
+             onMouseOut="this.style.color='#000'" (click)="noSeleccionarCreditosPorProceso()">No Seleccionar Nada</a>
+        </div>
+
+
+        <p-table #tablaCreditosPorProceso [value]="creditosPorProcesosArray"
+                 [paginator]="true"
+                 paginatorPosition="top"
+                 [rows]="10"
+                 [showCurrentPageReport]="true"
+                 responsiveLayout="scroll"
+                 [lazy]="true"
+                 [totalRecords]="this.creditosExcluidos.totalElements"
+                 (onLazyLoad)="cambiarPageCreditosPorProceso($event)"
+                 currentPageReportTemplate="Mostrando {first} de {{ this.creditosExcluidos.totalElements }} registros "
+                 styleClass="p-datatable-sm p-datatable-gridlines" class="text-base">
+          <ng-template pTemplate="header">
+            <tr>
+              <th>Seleccionar</th>
+              <th>Número Crédito</th>
+              <th>Monto</th>
+              <th>Tipo Identificación Titular</th>
+              <th>Identificación</th>
+              <th>Nombre Titular</th>
+              <th>Apellidos Titular</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-creditoAExcluir>
+
+            <tr>
+              <td><input type="checkbox" name="seleccionado" value=""
+                         [checked]="creditosDeshacerSeleccionTodo === true"></td>
+              <td>{{creditoAExcluir.creditosNumeroCredito}}</td>
+              <td>{{creditoAExcluir.creditosMonto | number }}</td>
+              <td>{{creditoAExcluir.creditosVUsuarioCreditoTipoIdentificacion}}</td>
+              <td>{{creditoAExcluir.creditosVUsuarioCreditoIdentificacion}}</td>
+              <td>{{creditoAExcluir.creditosVUsuarioCreditoNombre}}</td>
+              <td>{{creditoAExcluir.creditosVUsuarioCreditoApellidos}}</td>
+
+            </tr>
+
+          </ng-template>
+
+          <ng-template pTemplate="emptymessage">
+            <tr>
+              <td colspan="7">No hay registros disponibles</td>
+            </tr>
+          </ng-template>
+
+        </p-table>
+      </ng-template>
+
+
+    </ng-template>
+
+
+    <div class="creditos-excluir" *ngIf="mostrarCreditosAExcluir()">
+
+      <div>
+        <h4>CREDITOS A EXCLUIR</h4>
+
+        <p-table [value]="creditosExcluidos.content"
+                 [paginator]="true"
+                 paginatorPosition="top"
+                 [rows]="10"
+                 [showCurrentPageReport]="true"
+                 responsiveLayout="scroll"
+                 [lazy]="true"
+                 [totalRecords]="this.creditosExcluidos.totalElements"
+                 (onLazyLoad)="cambiarPageCreditosExcluir($event)"
+                 currentPageReportTemplate="Mostrando {first} de {{ this.creditosExcluidos.totalElements }} registros "
+                 styleClass="p-datatable-sm p-datatable-gridlines" class="text-base">
+          <ng-template pTemplate="header">
+            <tr>
+              <th>No. Crédito</th>
+              <th>Monto</th>
+              <th>Tipo Identificación Titular</th>
+              <th>Identificación</th>
+              <th>Nombre</th>
+              <th>Apellidos</th>
+              <th>¿Excluir?</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-creditoAExcluir>
+
+            <tr>
+              <td>{{creditoAExcluir.creditosNumeroCredito}}</td>
+              <td>{{creditoAExcluir.creditosMonto | number }}</td>
+              <td>{{creditoAExcluir.creditosVUsuarioCreditoTipoIdentificacion}}</td>
+              <td>{{creditoAExcluir.creditosVUsuarioCreditoIdentificacion}}</td>
+              <td>{{creditoAExcluir.creditosVUsuarioCreditoNombre}}</td>
+              <td>{{creditoAExcluir.creditosVUsuarioCreditoApellidos}}</td>
+              <td><input type="checkbox" id="seleccionado" name="seleccionado" value=""
+                         [disabled]="this.procesoEjecutadoResponse.content[0].estado.toUpperCase() !== 'DESPUES DESHACER'"
+                         (click)="excluirCreditoCheck( creditoAExcluir.seleccionado, creditoAExcluir.consecutivo )"
+                         [checked]="creditoAExcluir.seleccionado === 'S' "></td>
+            </tr>
+
+          </ng-template>
+
+          <ng-template pTemplate="emptymessage">
+            <tr>
+              <td colspan="7">No hay registros disponibles</td>
+            </tr>
+          </ng-template>
+
+        </p-table>
+      </div>
+
+    </div>
+
+
+    <h4>Procesos Incluidos</h4>
+    <!--<p>Sub Proceso</p>-->
+
+    <p-table [value]="procesosIncluidos" responsiveLayout="scroll"
+             styleClass="p-datatable-sm p-datatable-gridlines" class="text-base">
+      <ng-template pTemplate="header">
+        <tr>
+          <th pSortableColumn="nombreProceso">Proceso
+            <p-sortIcon field="nombreProceso"></p-sortIcon>
+          </th>
+          <th pSortableColumn="nombreSubproceso">SubProceso
+            <p-sortIcon field="nombreSubproceso"></p-sortIcon>
+          </th>
+          <th pSortableColumn="descripcion"> Descripción
+            <p-sortIcon field="descripcion"></p-sortIcon>
+          </th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-procesoIncluido>
+
+        <tr>
+          <td>{{ (procesoIncluido.nombreProceso === null) ? "" : procesoIncluido.nombreProceso }}</td>
+          <td>{{  (procesoIncluido.nombreSubproceso === null) ? "" : procesoIncluido.nombreSubproceso }}</td>
+          <td>
+            {{ (procesoIncluido.nombreProceso === null)
+            ? procesoIncluido.nombreSubproceso : procesoIncluido.nombreProceso }}
+          </td>
+
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="3">No hay registros disponibles</td>
+        </tr>
+      </ng-template>
+    </p-table>
+
+  </div>
+
+
+</ng-template>
+
+
+<ng-template [ngIf]="!busquedaConResultados">
+  <p> No se han encontrado registros </p>
+</ng-template>
+
+<p class="campos-obligatorios">Los campos marcados con asterisco (*) son obligatorios</p>
+<hr>

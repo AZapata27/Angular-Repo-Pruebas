@@ -1,0 +1,692 @@
+<h1>Definición de Procesos </h1>
+
+<br>
+<button pButton type="button" id="btnGrabarProceso" (click)="grabarProceso()" label="Grabar"></button>
+<br>
+
+
+<div class="card flex justify-content-center align-content-center text-center">
+  <div class="busqueda-simple" *ngIf="busquedaSimple">
+    <h4>Busqueda simple</h4>
+
+    <form [formGroup]="formularioBusquedaSimple" class="formgroup-inline">
+
+      <!--Indice a seleccionar -->
+
+      <div class="field">
+        <select class="w-full text-color surface-overlay"
+                formControlName="selectedIndice" (change)="cambiarCampoDeBusqueda()">
+          <option *ngFor="let option of opciones" value="{{option.value}}">{{option.label}} </option>
+        </select>
+      </div>
+
+      <!--Buscar por nombre del proceso o descripcion -->
+      <div *ngIf="buscarComoOption === 1 || buscarComoOption === 2" class="field">
+        <input class="inputfield w-full" type="text"
+               formControlName="campoBuscar" pInputText autocomplete="off">
+      </div>
+
+      <!--Buscar por ejecucion por periodicidad-->
+
+      <div *ngIf="buscarComoOption === 3 " class="field">
+        <select class="w-full  text-color surface-overlay"
+                formControlName="campoBuscar">
+
+          <option *ngFor="let option of ejecucionXPeridicidadList"
+                  value="{{option.value}}">{{option.label}}
+          </option>
+        </select>
+      </div>
+
+
+      <!-- Buscar por fecha de inicio -->
+
+      <div *ngIf="buscarComoOption === 4" class="field">
+        <p-calendar [showIcon]="true" class="inputfield w-full" inputId="fecha-inicio"
+                    formControlName="campoBuscar" dateFormat="dd-mm-yy" (onInput)="validarFechas($event, 'campoBuscar')">
+        </p-calendar>
+      </div>
+
+
+      <!-- Buscar por ¿Ejecución por fecha especifica?
+           Buscar por deplegable Si y No -->
+
+      <div *ngIf="buscarComoOption === 5 || buscarComoOption === 6 " class="field">
+        <select class="w-full  text-color surface-overlay"
+                formControlName="campoBuscar">
+
+          <option *ngFor="let option of siYNoOpciones "
+                  value="{{option.value}}">{{option.label}}
+          </option>
+        </select>
+      </div>
+
+
+      <button pButton type="submit" icon="pi pi-search" iconPos="right" label="Ir"
+              (click)="buscarPorFiltroSimple()"></button>
+
+      <button pButton type="button" id="btnBusquedaAvanzada" class="ml-1" (click)="cambiarBusqueda(false)"
+              label="Busqueda Avanzada"></button>
+
+    </form>
+
+  </div>
+
+
+  <div class="busqueda-avanzada" *ngIf="!busquedaSimple">
+    <h4>Busqueda avanzada</h4>
+
+    <div class="acciones-busqueda-avanzada mb-3">
+
+      <button pButton type="button" id="btnBusquedaSimple" icon="pi pi-arrow-circle-left" iconPos="left"
+              class="mr-1" (click)="cambiarBusqueda(true)" label="Volver a Busqueda simple"></button>
+
+      <button pButton type="button" icon="pi pi-search" iconPos="right" class="mr-1" label="Buscar"
+              (click)="buscarPorFiltroAvanzado()"></button>
+
+      <button pButton type="button" icon="pi pi-times-circle" iconPos="right" class="" label="Limpiar"
+              (click)="limpiarCamposFormularioBusquedaAvanzada()"></button>
+    </div>
+
+
+    <form [formGroup]="formularioBusquedaAvanzada" class="formgrid">
+
+      <div class="card">
+        <div class="grid justify-content-center">
+
+          <div class="field col-4">
+            <label for="nombreProceso">Nombre Proceso</label>
+            <input class="inputfield w-full" type="text"
+                   pInputText autocomplete="off" formControlName="nombreProceso">
+          </div>
+
+
+          <div class="field col-4">
+            <label for="descripcion">Descripción</label>
+            <input class="inputfield w-full" type="text"
+                   pInputText autocomplete="off" formControlName="descripcion">
+          </div>
+
+
+          <div class="field col-4">
+            <label for="ejecucionXPeriodicidad">Ejecución por Periodicidad</label>
+            <select class="w-full  text-color surface-overlay"
+                    formControlName="ejecucionXPeriodicidad">
+
+              <option *ngFor="let option of ejecucionXPeridicidadList"
+                      value="{{option.value}}">{{option.label}}
+              </option>
+            </select>
+          </div>
+
+        </div>
+
+        <div class="grid justify-content-center">
+
+
+          <div class="field col-4">
+            <label for="ejecucionXFechaEspecifica">¿Ejecución por Fecha Específica?</label>
+            <select class="w-full  text-color surface-overlay"
+                    formControlName="ejecucionXFechaEspecifica">
+
+              <option *ngFor="let option of siYNoOpciones "
+                      value="{{option.value}}">{{option.label}}
+              </option>
+            </select>
+          </div>
+
+
+          <div class="field col-4">
+            <label for="fechaInicio">Fecha Inicio</label>
+            <p-calendar [showIcon]="true" class="inputfield w-full" inputId="fechaInicio"
+                        formControlName="fechaInicio" dateFormat="dd-mm-yy" [style]="{'width':'25rem'}"
+                        (onInput)="validarFechas($event, 'fechaInicio')">
+            </p-calendar>
+          </div>
+
+
+          <div class="field col-4">
+            <label for="activo">¿Activo?</label>
+            <select class="w-full  text-color surface-overlay"
+                    formControlName="activo">
+
+              <option *ngFor="let option of siYNoOpciones "
+                      value="{{option.value}}">{{option.label}}
+              </option>
+            </select>
+          </div>
+        </div>
+
+
+      </div>
+    </form>
+    <br>
+
+  </div>
+
+</div>
+
+
+<ng-template [ngIf]="busquedaConResultados">
+
+  <div class="card  mt-4 ">
+
+    <p-paginator #paginador [rows]="1" [totalRecords]="totalElements"
+                 currentPageReportTemplate="{first} de {{ totalElements }}"
+                 [showCurrentPageReport]="true"
+                 [pageLinkSize]="1" (onPageChange)="cambiarProceso($event)"></p-paginator>
+
+
+    <div class="list-group list-group-flush">
+      <div class="ml-2 list-group-item">
+        <label class="lbl-info-proceso-definicion"> Nombre Proceso </label>
+        <span class="pl-2 mt-2">
+               {{  this.procesosDefinidos.nombre }}
+          </span>
+      </div>
+      <div class="ml-2 list-group-item">
+        <label class="lbl-info-proceso-definicion"> Descripción </label>
+        <span class="pl-2 mt-2">
+               {{ this.procesosDefinidos.descripcion }}
+              </span>
+      </div>
+
+      <div class="ml-2 list-group-item">
+        <label class="lbl-info-proceso-definicion"> * Ejecución x Periodicidad </label>
+        <span class="pl-2 mt-2">
+            <select class="w-full  text-color surface-overlay" [(ngModel)]="this.procesosDefinidos.periodicidadEjecucion">
+
+             <option *ngFor="let option of ejecucionXPeridicidadList"
+                     value="{{option.value}}">{{option.label}}
+             </option>
+           </select>
+
+          </span>
+      </div>
+
+      <div class="ml-2 list-group-item">
+        <label class="lbl-info-proceso-definicion"> Fecha Inicio </label>
+        <span class="pl-2 mt-2">
+                {{this.procesosDefinidos.fechaInicio }}
+          </span>
+      </div>
+
+      <div class="ml-2 list-group-item">
+        <label class="lbl-info-proceso-definicion"> * ¿Ejecución por Fecha Específica? </label>
+        <span class="pl-2 mt-2">
+                <select class="w-full  text-color surface-overlay" [(ngModel)]="this.procesosDefinidos.permitirEjecucionExtemp">
+
+                      <option *ngFor="let option of siYNoOpciones "
+                              value="{{option.value}}">{{option.label}}
+                      </option>
+                    </select>
+            </span>
+      </div>
+
+
+      <div class="ml-2 list-group-item">
+        <label class="lbl-info-proceso-definicion"> * ¿Activo? </label>
+        <span class="pl-2 mt-2">
+                <select class="w-full  text-color surface-overlay" [(ngModel)]="this.procesosDefinidos.activo">
+
+                    <option *ngFor="let option of siYNoOpciones "
+                            value="{{option.value}}">{{option.label}}
+                    </option>
+                  </select>
+
+            </span>
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <br>
+  <br>
+
+
+  <div class="tabulacion">
+
+    <!--
+      Atencion: si el banco decide dejar detalles, se debe implementar el llamado al método
+      mostrar detalles.
+      <button pButton type="button" id="btnDetalles" label="Detalles"  (click)="mostrarDetalles()" class="mb-2"></button>
+    -->
+
+    <h4> Programación de Ejecución del Proceso </h4>
+
+    <div class="card justify-content-center align-content-center text-center">
+
+      <!-- Propiedades  para seleccionar la fila:
+        selectionMode="single"
+        (onRowUnselect)="deSeleccionarFila()
+         [(selection)]="programacionProcesoSeleccionado""-->
+      <p-table [value]="procesosDefinidos.programacionDeEjecucion"
+               [resizableColumns]="true" styleClass="p-datatable-gridlines"
+               [showCurrentPageReport]="true"
+               responsiveLayout="scroll"
+               [style]="{'text-align':'center'}"
+               [rows]="10" styleClass="p-datatable-sm p-datatable-gridlines p-datatable-striped">
+        <ng-template pTemplate="header">
+          <tr>
+            <th style="width: 700px;"> Fecha Inicio Vigencia</th>
+            <th>¿Programación Alterna?</th>
+            <th> ¿Última Ejecucion?</th>
+            <th> Día del Mes</th>
+            <th>¿Domingo?</th>
+            <th>¿Lunes?</th>
+            <th>¿Martes?</th>
+            <th>¿Miércoles?</th>
+            <th>¿Jueves?</th>
+            <th>¿Viernes?</th>
+            <th>¿Sábado?</th>
+            <th>Sólo Días Hábiles</th>
+            <th>Fecha Específica</th>
+          </tr>
+
+        </ng-template>
+        <ng-template pTemplate="body" let-procesoProgramado>
+          <!-- [pSelectableRow]="procesoProgramado" -->
+          <tr>
+            <td>{{ procesoProgramado.fechaInicio  }}</td>
+            <td>{{procesoProgramado.alternada }}</td>
+            <td>{{procesoProgramado.ultimaFechaEjecucion}}</td>
+            <td>{{procesoProgramado.diaMes}}</td>
+            <td>{{procesoProgramado.domingo}}</td>
+            <td>{{procesoProgramado.lunes}}</td>
+            <td>{{procesoProgramado.martes}}</td>
+            <td>{{procesoProgramado.miercoles}}</td>
+            <td>{{procesoProgramado.jueves}}</td>
+            <td>{{procesoProgramado.viernes}}</td>
+            <td>{{procesoProgramado.sabado}}</td>
+            <td>{{procesoProgramado.soloDiaHabil}}</td>
+            <td>{{procesoProgramado.fechaEspecifica}}</td>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="13">No hay registros disponibles</td>
+          </tr>
+        </ng-template>
+
+      </p-table>
+
+    </div>
+    <button pButton type="button" id="btnNuevoProgramacion" (click)="crearNuevaProgramacion()" label="Nuevo Programación"></button>
+    <br>
+  </div>
+
+  <br>
+  <br>
+
+
+  <h4> Sub-Procesos Asociados</h4>
+
+
+  <p-table [value]=" procesosDefinidos.subprocesosAsociados" responsiveLayout="scroll"
+           styleClass="p-datatable-sm p-datatable-gridlines p-datatable-striped" class="text-base">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Sub-Proceso</th>
+        <th>Orden</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-procesoIncluido>
+
+      <tr>
+        <td>{{ procesoIncluido.nombre }}</td>
+        <td>{{ procesoIncluido.ordenSubproceso }}</td>
+      </tr>
+
+    </ng-template>
+
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="2">No hay registros disponibles</td>
+      </tr>
+    </ng-template>
+
+  </p-table>
+
+
+  <!-- DIALOGS -->
+
+
+  <!-- Dialog Grabar Nueva Programación-->
+
+  <p-dialog header="Ingrese Nuevo Programación" [(visible)]="mostrarModalNuevaProgramacion"
+            [modal]="true"
+            [style]="{width: '50%'}"
+            [baseZIndex]="10000"
+            [draggable]="false">
+
+    <br>
+
+    <button pButton type="button" id="btnGuardar" label="Grabar" (click)="guardarNuevaProgramacion()"></button>
+    <br>
+
+    <p> Definición de Procesos
+      <span style="color: #669BCD; font-weight: bold; margin-left: 1rem;"> {{ this.procesosDefinidos.nombre }}</span>
+    </p>
+    <hr>
+
+    <div class="card">
+
+      <div class="field grid">
+        <label for="fechaInicioVigencia" class="col-12 mb-2 md:col-4 md:mb-0">* Fecha Inicio Vigencia</label>
+        <div class="col-12 md:col-5">
+          <p-calendar [showIcon]="true" class="inputfield w-full" id="fechaInicioVigencia" inputId="fechaInicioVigencia"
+                      dateFormat="dd-mm-yy" (onInput)="validarFechas($event, 'fechaInicioVigencia')"
+                      [(ngModel)]="this.nuevaProgramacionProcesos.fechaInicio">
+          </p-calendar>
+        </div>
+      </div>
+
+      <div class="field grid">
+        <label for="programacionAlterna" class="col-12 mb-2 md:col-4 md:mb-0">* ¿Programación Alterna?</label>
+        <div class="col-12 md:col-2">
+          <select class="w-full  text-color surface-overlay"
+                  [(ngModel)]="this.nuevaProgramacionProcesos.alternada">
+
+            <option *ngFor="let option of siYNoOpciones "
+                    value="{{option.value}}">{{option.label}}
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Ultima ejecucion -->
+      <div class="field grid">
+        <label for="ultimaEjecucion" class="col-12 mb-2 md:col-4 md:mb-0">Última Ejecución</label>
+      </div>
+
+
+      <ng-template [ngIf]="this.procesoDefinidoAComparar.permitirEjecucionExtemp === 'N'">
+
+        <strong> Programación {{tipoProgramacion}} </strong>
+
+        <div class="programacion-tipo" *ngIf=" tipoProgramacion === 'Diario' ">
+
+          <div class="field grid">
+            <label for="diasHabiles" class="col-12 mb-2 md:col-4 md:mb-0">*¿Sólo dias Hábiles?</label>
+
+            <div class="col-12 md:col-2">
+              <select class="w-full  text-color surface-overlay" [(ngModel)]="this.nuevaProgramacionProcesos.soloDiaHabil">
+                <option *ngFor="let option of siYNoOpciones "
+                        value="{{option.value}}">{{option.label}}
+                </option>
+              </select>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="programacion-tipo" *ngIf=" tipoProgramacion === 'Semanal' ">
+
+          <div class="field grid">
+            <label for="domingo" class="col-12 mb-2 md:col-4 md:mb-0">*¿Domingo?</label>
+            <div class="col-12 md:col-2">
+
+              <select class="w-full  text-color surface-overlay"
+                      [(ngModel)]="this.nuevaProgramacionProcesos.domingo">
+
+                <option *ngFor="let option of siYNoOpciones "
+                        value="{{option.value}}">{{option.label}}
+                </option>
+              </select>
+            </div>
+          </div>
+
+          <div class="field grid">
+            <label class="col-12 mb-2 md:col-4 md:mb-0"> * ¿Lunes?</label>
+
+            <div class="col-12 md:col-2">
+
+              <select class="w-full  text-color surface-overlay"
+                      [(ngModel)]="this.nuevaProgramacionProcesos.lunes">
+
+                <option *ngFor="let option of siYNoOpciones "
+                        value="{{option.value}}">{{option.label}}
+                </option>
+              </select>
+
+            </div>
+
+          </div>
+
+          <div class="field grid">
+            <label class="col-12 mb-2 md:col-4 md:mb-0"> * ¿Martes?</label>
+
+            <div class="col-12 md:col-2">
+
+              <select class="w-full  text-color surface-overlay"
+                      [(ngModel)]="this.nuevaProgramacionProcesos.martes">
+
+                <option *ngFor="let option of siYNoOpciones "
+                        value="{{option.value}}">{{option.label}}
+                </option>
+              </select>
+
+            </div>
+
+          </div>
+
+          <div class="field grid">
+            <label class="col-12 mb-2 md:col-4 md:mb-0"> * ¿Miércoles?</label>
+
+            <div class="col-12 md:col-2">
+
+              <select class="w-full  text-color surface-overlay"
+                      [(ngModel)]="this.nuevaProgramacionProcesos.miercoles">
+
+                <option *ngFor="let option of siYNoOpciones "
+                        value="{{option.value}}">{{option.label}}
+                </option>
+              </select>
+
+            </div>
+
+          </div>
+
+          <div class="field grid">
+            <label class="col-12 mb-2 md:col-4 md:mb-0"> * ¿Jueves?</label>
+
+            <div class="col-12 md:col-2">
+
+              <select class="w-full  text-color surface-overlay"
+                      [(ngModel)]="this.nuevaProgramacionProcesos.jueves">
+
+                <option *ngFor="let option of siYNoOpciones "
+                        value="{{option.value}}">{{option.label}}
+                </option>
+              </select>
+
+            </div>
+
+          </div>
+
+          <div class="field grid">
+            <label class="col-12 mb-2 md:col-4 md:mb-0"> * ¿Viernes?</label>
+
+            <div class="col-12 md:col-2">
+
+              <select class="w-full  text-color surface-overlay"
+                      [(ngModel)]="this.nuevaProgramacionProcesos.viernes">
+
+                <option *ngFor="let option of siYNoOpciones "
+                        value="{{option.value}}">{{option.label}}
+                </option>
+              </select>
+
+            </div>
+
+          </div>
+
+          <div class="field grid">
+            <label class="col-12 mb-2 md:col-4 md:mb-0"> * ¿Sábado?</label>
+
+            <div class="col-12 md:col-2">
+
+              <select class="w-full  text-color surface-overlay"
+                      [(ngModel)]="this.nuevaProgramacionProcesos.sabado">
+
+                <option *ngFor="let option of siYNoOpciones "
+                        value="{{option.value}}">{{option.label}}
+                </option>
+              </select>
+
+            </div>
+
+          </div>
+
+
+        </div>
+
+        <div class="programacion-tipo field grid" *ngIf=" tipoProgramacion === 'Mensual' ">
+          <label for="diaDelMes" class="col-12 mb-2 md:col-4 md:mb-0">* Día del Mes </label>
+          <div class="col-12 md:col-2">
+            <input class="inputfield w-full" [(ngModel)]="this.nuevaProgramacionProcesos.diaMes" type="text"
+                   id="diaDelMes" pInputText autocomplete="off" (keypress)="validCantidadCaracteres()">
+          </div>
+        </div>
+
+      </ng-template>
+
+
+      <ng-template [ngIf]="this.procesoDefinidoAComparar.permitirEjecucionExtemp === 'S'">
+
+        <div class="field grid">
+          <label for="fechaEspecifica" class="col-12 mb-2 md:col-4 md:mb-0">Fecha Especifica</label>
+          <div class="col-12 md:col-5">
+            <p-calendar [showIcon]="true" class="inputfield w-full" id="fechaEspecifica"
+                        inputId="fechaEspecifica" dateFormat="dd-mm-yy" [(ngModel)]="this.nuevaProgramacionProcesos.fechaEspecifica"
+                        (onInput)="validarFechas($event, 'fechaEspecifica')">
+            </p-calendar>
+          </div>
+        </div>
+
+      </ng-template>
+
+    </div>
+
+    <br>
+    <br>
+
+    <p class="campos-obligatorios">Los campos marcados con asterisco (*) son obligatorios</p>
+    <hr>
+
+  </p-dialog>
+
+
+  <!-- Dialog ver programación
+
+  Atención: este dialog muestra las diferentes programaciones, se utilizará
+  sólo si el banco decide dejarlo según lo contemplado en la migración.
+
+
+  <p-dialog header="Ver  Programación" [(visible)]="display" [modal]="true" [style]="{width: '50%'}"
+   [baseZIndex]="10000"
+   [draggable]="false" [resizable]="false">
+
+  <p> Definición de Procesos  <span style="color: #669BCD; font-weight: bold; margin-left: 1rem;"> {{ this.procesosDefinidos.nombre }}</span>  </p>
+   <hr>
+
+   <p-table [value]="procesosDefinidos.programacionDeEjecucion" [paginator]="true"
+   [rows]="1" [showCurrentPageReport]="true"
+   [pageLinks]="1"
+   paginatorPosition="top"
+   currentPageReportTemplate=" {first} de {totalRecords}"  styleClass="p-datatable-sm">
+   <ng-template pTemplate="header">
+      <tr>
+          <th></th>
+
+      </tr>
+   </ng-template>
+   <ng-template pTemplate="body" let-procesoProgramado>
+       <tr>
+           <td>
+
+              <div class="list-group list-group-flush">
+                  <div class="mt-1 ml-2 list-group-item">
+                    <label class="lbl-info-proceso-definicion"> Fecha Inicio Vigencia   </label>
+                          <span class="pl-2 mt-2">
+                              {{procesoProgramado.fechaInicio}}
+                          </span>
+                    </div>
+
+                    <div class="mt-1 ml-2 list-group-item">
+                      <label class="lbl-info-proceso-definicion"> ¿Programación Alterna?	  </label>
+                            <span class="pl-2 mt-2">
+                                {{procesoProgramado.alternada  }}
+                            </span>
+                      </div>
+
+                      <div class="mt-1 ml-2 list-group-item">
+                          <label class="lbl-info-proceso-definicion"> Última Ejecución  </label>
+                                <span class="pl-2 mt-2">
+                                    {{procesoProgramado.ultimaFechaEjecucion }}
+                                </span>
+                          </div>
+
+                      <br>
+                      <br>
+                      <div class="programacion-tipo" *ngIf="tipoProgramacion === 'Diario' " >
+                        <p>Programación Semanal </p>
+                        <div class="mt-1 ml-2 list-group-item">
+                          <ul style="list-style: none ;">
+                            <li> ¿Sólo Días Hábiles?	 <span>{{procesoProgramado.domingo}}</span>  </li>
+
+                          </ul>
+                      </div>
+                    </div>
+
+                      <div class="programacion-tipo" *ngIf=" tipoProgramacion === 'Semanal' " >
+                        <p>Programación Semanal </p>
+                        <div class="mt-1 ml-2 list-group-item">
+                          <ul style="list-style: none ;">
+                            <li> ¿Domingo? <span>{{procesoProgramado.domingo}}</span>  </li>
+                            <li> ¿Lunes? <span>{{procesoProgramado.lunes}}</span>  </li>
+                            <li> ¿Martes? <span>{{procesoProgramado.martes}}</span>  </li>
+                            <li> ¿Miercoles? <span>{{procesoProgramado.miercoles}}</span>  </li>
+                            <li> ¿Jueves? <span>{{procesoProgramado.jueves}}</span>  </li>
+                            <li> ¿Viernes? <span>{{procesoProgramado.viernes}}</span>  </li>
+                            <li> ¿Sabado? <span>{{procesoProgramado.sabado}}</span> </li>
+                          </ul>
+                      </div>
+                    </div>
+
+
+                  <div class="programacion-tipo" *ngIf=" tipoProgramacion === 'Mensual' " >
+                      <p>Programación Mensual </p>
+                      <div class="mt-1 ml-2 list-group-item">
+                          <label class="lbl-info-proceso-definicion"> Día del mes </label>
+                                <span class="pl-2 mt-2">
+                                     {{procesoProgramado.diaMes}}
+                                </span>
+                          </div>
+                    </div>
+
+                    </div>
+
+
+          </td>
+       </tr>
+   </ng-template>
+
+  </p-table>
+
+  </p-dialog>
+
+  -->
+
+</ng-template>
+
+<ng-template [ngIf]="!busquedaConResultados">
+  <p> No se han encontrado registros </p>
+</ng-template>
+
+
+
+
