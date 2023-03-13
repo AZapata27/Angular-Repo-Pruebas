@@ -2,13 +2,13 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MensajeService } from 'app/core/services/mensaje.service';
 import { SelectItem } from 'primeng/api/selectitem';
-import { ParametrosEspecificosService } from '../../../core/services/parametros-especificos.service';
-import { ParametroEspecificoResponse } from '../../../core/models/response/ParametrosEspecificos.response';
-import { ParametroEspecifico } from 'app/core/models/parametroEspecifico.interface';
+import { ParametroEspecificoResponse } from '../model/response/parametros-especificos-response';
 import { LazyLoadEvent } from 'primeng/api';
-import { ParametroEspecificoRequest } from '../../../core/models/request/parametroEspecifico.request';
+import { ParametrosEspecificoRequest } from '../model/request/parametros-especifico-request';
 import { Table } from 'primeng/table';
 import { Paginator } from 'primeng/paginator';
+import { ParametrosEspecificosService } from "../services/parametros-especificos.service";
+import { ParametroEspecifico } from "../model/parametro-especifico";
 
 @Component({
   selector: 'app-parametros-especificos',
@@ -27,7 +27,7 @@ export class ParametrosEspecificosComponent implements OnInit {
   formularioBusquedaSimple!: FormGroup;
   formularioBusquedaAvanzada!: FormGroup;
   formularioParametrosEspecificos!: FormGroup;
-  objetoABuscar!: ParametroEspecificoRequest;
+  objetoABuscar!: ParametrosEspecificoRequest;
   @ViewChild('turboTable', {static: false}) turboTable!: Table;
   @ViewChild('paginador', {static: false}) paginador!: Paginator;
   currentPagePaginador: number = 0;

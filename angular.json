@@ -9,6 +9,9 @@
     "kepiaa-angular": {
       "projectType": "application",
       "schematics": {
+        "@schematics/angular:*": {
+          "skipTests": true
+        },
         "@schematics/angular:application": {
           "strict": true
         }

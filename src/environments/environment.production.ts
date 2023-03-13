@@ -5,9 +5,3 @@ export const environment = {
   hostApiAdministracion: "http://192.168.24.18:8490/",
   mode: "production"
 };
-
-// el ng serve nunca debe ser usado para produccion.
-// por varias razones de seguridad y rendimiento.
-
-// enviropments: local, dev, test, prod
- 

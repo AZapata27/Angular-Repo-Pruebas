@@ -2,21 +2,21 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MensajeService } from 'app/core/services/mensaje.service';
 import { SelectItem } from 'primeng/api/selectitem';
-import { ParametrosComunesService } from '../../../core/services/parametros-comunes.service';
-import { ParametroComun } from '../../../core/models/parametroComun.interface';
-import { ParametrosComunesResponse } from '../../../core/models/response/ParametrosComunes.response';
+import { ParametrosComunesResponse } from '../model/response/parametros-comunes-response';
 import { LazyLoadEvent, PrimeNGConfig } from 'primeng/api';
-import { ParametroComunRequest } from 'app/core/models/request/parametroComun.request';
-import { ParametroComunAGuardarRequest } from 'app/core/models/request/parametroComunAGuardar.request';
+import { ParametroComunRequest } from 'app/features/parametros/model/request/parametro-comun-request';
+import { ParametroComunGuardarRequest } from 'app/features/parametros/model/request/parametro-comun-guardar-request';
 import { Paginator } from 'primeng/paginator';
-import { ValorParametro } from 'app/core/models/valorParametro.interface';
 import { Subscription } from 'rxjs/internal/Subscription';
 import { TranslateService } from '@ngx-translate/core';
-import { estadoParametroEnum } from 'app/core/enums/estadoParametro.enum';
-import { MenuService } from "../../../core/services/menu.service";
-import { perfilesS3Enum } from "../../../core/enums/perfilesS3.enum";
-import { tipoValidacionEnum } from 'app/core/enums/tipoValidacion.enum';
+import { estadoParametro } from 'app/features/parametros/model/enums/estado-parametro';
+import { perfilesS3 } from "../../../shared/models/enums/perfiles-S3";
+import { tipoValidacion } from 'app/features/parametros/model/enums/tipo-validacion';
 import { DateUtilsService } from "../../../shared/services/date-utils.service";
+import { ParametroComun } from "../model/parametro-comun";
+import { ValorParametro } from "../model/valor-parametro";
+import { ParametrosComunesService } from "../services/parametros-comunes.service";
+import { UsuarioService } from "../../../shared/services/usuario.service";
 
 
 @Component({
@@ -49,7 +49,7 @@ export class ParametrosComunesPendientesComponent implements OnInit {
   valorParametroSeleccionado: ValorParametro = {} as ValorParametro;
 
   parametrosComunesResponse!: ParametrosComunesResponse;
-  parametroComunAGuardar: ParametroComunAGuardarRequest = {} as ParametroComunAGuardarRequest;
+  parametroComunAGuardar: ParametroComunGuardarRequest = {} as ParametroComunGuardarRequest;
   objetoABuscar!: ParametroComunRequest;
   fechaActual = this.dateUtilsService.getDateNowString();
   crearNuevoValorParametro: boolean = false;
@@ -68,11 +68,11 @@ export class ParametrosComunesPendientesComponent implements OnInit {
 
   @ViewChild('paginador', {static: false}) paginadorTablaPrincipal!: Paginator;
 
-  private perfilesUsuario: perfilesS3Enum[] = [];
+  private perfilesUsuario: perfilesS3[] = [];
 
 
   constructor(private parametrosComunesService: ParametrosComunesService,
-              private menuService: MenuService,
+              private usuarioService: UsuarioService,
               private _formBuilder: FormBuilder,
               private mensajeService: MensajeService,
               private config: PrimeNGConfig,
@@ -125,7 +125,7 @@ export class ParametrosComunesPendientesComponent implements OnInit {
     });
 
 
-    this.menuService.getPerfiles().subscribe(perfilesUsuario => {
+    this.usuarioService.getPerfiles().subscribe(perfilesUsuario => {
       this.perfilesUsuario = perfilesUsuario;
     });
 
@@ -479,7 +479,7 @@ export class ParametrosComunesPendientesComponent implements OnInit {
       } else {
         this.flagEnableBotonAprobar = false;
         this.flagEnableBotonRechazar = false;
-        if (this.parametroComunPendienteSeleccionado.tipoValidacion == tipoValidacionEnum.DI) {
+        if (this.parametroComunPendienteSeleccionado.tipoValidacion == tipoValidacion.DI) {
 
           this.valorParametroSeleccionado.valor = "";
           this.valorParametroSeleccionado.fechaVigencia = "";
@@ -691,7 +691,7 @@ export class ParametrosComunesPendientesComponent implements OnInit {
     }
 
 
-    const values = Object.entries(estadoParametroEnum).map(([key, value]) => ({id: key, value: value}));
+    const values = Object.entries(estadoParametro).map(([key, value]) => ({id: key, value: value}));
     return values
       .filter(estado => estado.id === type)[0].value;
   }
@@ -796,7 +796,7 @@ export class ParametrosComunesPendientesComponent implements OnInit {
       } else {
         this.flagEnableBotonAprobar = false;
         this.flagEnableBotonRechazar = false;
-        if (this.parametroComunPendienteSeleccionado.tipoValidacion == tipoValidacionEnum.DI) {
+        if (this.parametroComunPendienteSeleccionado.tipoValidacion == tipoValidacion.DI) {
           this.valorParametroSeleccionado.valor = "";
           this.valorParametroSeleccionado.fechaVigencia = "";
           this.valorParametroSeleccionado.valorMaximo = "";
@@ -844,8 +844,8 @@ export class ParametrosComunesPendientesComponent implements OnInit {
 
   perfilRequeridoAprobador(): boolean {
 
-    return this.perfilesUsuario.indexOf(perfilesS3Enum.ADMINISTRADOR) != -1
-      || this.perfilesUsuario.indexOf(perfilesS3Enum.APROBADOR) != -1;
+    return this.perfilesUsuario.indexOf(perfilesS3.ADMINISTRADOR) != -1
+      || this.perfilesUsuario.indexOf(perfilesS3.APROBADOR) != -1;
 
   }
 

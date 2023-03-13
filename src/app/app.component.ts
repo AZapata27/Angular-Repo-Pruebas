@@ -1,25 +1,8 @@
 import { Component } from '@angular/core';
-import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent {
-  title = 'kepiaa';
-
-  constructor(private message: MessageService) {
-  }
-
-
-  ngOnInit() {
-  }
-
-
-  cerrar() {
-    this.message.clear();
-  }
-
-
-}
+export class AppComponent {}

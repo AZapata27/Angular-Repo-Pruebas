@@ -44,7 +44,7 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
-
+kepiaa-angular.iml
 
 /target
 

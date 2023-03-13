@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MenuItem } from 'primeng/api/menuitem';
-import { MenuService } from '../../../core/services/menu.service';
+import { UsuarioService } from "../../services/usuario.service";
 
 @Component({
   selector: 'menu',
@@ -11,7 +11,7 @@ export class MenuComponent implements OnInit {
 
   items: MenuItem[] = [];
 
-  constructor(private menuService: MenuService) {
+  constructor(private menuService: UsuarioService) {
   }
 
   ngOnInit(): void {

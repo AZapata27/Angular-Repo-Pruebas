@@ -5,9 +5,7 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 
 @NgModule({
-  declarations: [
-    SpinnerComponent
-  ],
+  declarations: [SpinnerComponent],
   imports: [
     CommonModule,
     ProgressSpinnerModule

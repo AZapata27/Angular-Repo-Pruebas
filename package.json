@@ -15,8 +15,7 @@
     "build:production": "ng build  --c=production",
     "build:qa": "ng build  --c=qa",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test",
-    "compodoc": "npx compodoc -p tsconfig.doc.json"
+    "test": "ng test"
   },
   "private": true,
   "dependencies": {

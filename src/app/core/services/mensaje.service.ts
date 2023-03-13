@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
-import { EmitirMensaje } from '../models/EmitirMensaje.interface';
+import { MensajeAlerta } from '../../shared/models/mensaje-alerta';
 
 @Injectable({
   providedIn: 'root',
@@ -8,7 +8,7 @@ import { EmitirMensaje } from '../models/EmitirMensaje.interface';
 })
 export class MensajeService {
 
-  messageSubject: BehaviorSubject<EmitirMensaje> = new BehaviorSubject<EmitirMensaje>({
+  messageSubject: BehaviorSubject<MensajeAlerta> = new BehaviorSubject<MensajeAlerta>({
     showMessage: false,
     detalles: "",
     icon: ""
@@ -17,7 +17,7 @@ export class MensajeService {
   constructor() {
   }
 
-  mostrarMensajeError(error: EmitirMensaje) {
+  mostrarMensajeError(error: MensajeAlerta) {
     //console.log(error)
     error.icon = "pi pi-times-circle";
     this.messageSubject.next(error);
@@ -27,7 +27,7 @@ export class MensajeService {
     this.messageSubject.next({showMessage: false, detalles: "", icon: ""});
   }
 
-  mostrarMensajeExitoso(success: EmitirMensaje) {
+  mostrarMensajeExitoso(success: MensajeAlerta) {
     success.icon = "pi pi-exclamation-circle";
     this.messageSubject.next(success);
   }

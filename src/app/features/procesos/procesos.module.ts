@@ -1,67 +1,35 @@
-// Centrales
-
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { HttpClientModule } from '@angular/common/http';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-// Compartidos
-import { SharedPrimeNgModule } from 'app/shared/SharedPrimeNg.module';
+import { SharedModule } from 'app/shared/shared.module';
 
-//PrimeNg:
-import { RadioButtonModule } from 'primeng/radiobutton';
-import { PaginatorModule } from 'primeng/paginator';
-import { CheckboxModule } from 'primeng/checkbox';
-
-// De funciones
-import { SpinnerModulo } from 'app/shared/components/spinner/spinner.module';
-import { EjecucionProcesosPageComponent } from './ejecucion-procesos-page/ejecucion-procesos-page.component';
+import { EjecucionProcesosComponent } from './ejecucion-procesos/ejecucion-procesos.component';
 import {
-  ResultadoEjecucionProcesosPageComponent
-} from './resultado-ejecucion-procesos-page/resultado-ejecucion-procesos-page.component';
-import { DialogInformacionProcesos } from './resultado-ejecucion-procesos-page/DialogInformacionProcesos';
+  ResultadoEjecucionProcesosComponent
+} from './resultado-ejecucion-procesos/resultado-ejecucion-procesos.component';
+import { DialogInformacionEjecucionProcesoComponent } from './resultado-ejecucion-procesos/dialog-informacion-ejecucion-proceso.component';
 import {
-  ConsultaProcesosProgramadosPageComponent
-} from './consulta-procesos-programados-page/consulta-procesos-programados-page.component';
-import { DefinicionProcesosPageComponent } from './definicion-procesos-page/definicion-procesos-page.component';
-import { DialogSubProcesosComponent } from './consulta-procesos-programados-page/DialogSubprocesos.component';
-import { DialogModule } from 'primeng/dialog';
+  ConsultaProcesosProgramadosComponent
+} from './consulta-procesos-programados/consulta-procesos-programados.component';
+import { DefinicionProcesosComponent } from './definicion-procesos/definicion-procesos.component';
+import { DialogSubprocesosComponent } from './consulta-procesos-programados/dialog-subprocesos.component';
+
+import { CreditosEspecificosComponent } from "./creditos-especificos/creditos-especificos.component";
 
 @NgModule({
   declarations: [
-    ConsultaProcesosProgramadosPageComponent,
-    DefinicionProcesosPageComponent,
-    EjecucionProcesosPageComponent,
-    ResultadoEjecucionProcesosPageComponent,
-    DialogInformacionProcesos,
-    DialogSubProcesosComponent
+    ConsultaProcesosProgramadosComponent,
+    DefinicionProcesosComponent,
+    EjecucionProcesosComponent,
+    ResultadoEjecucionProcesosComponent,
+    CreditosEspecificosComponent,
+    DialogInformacionEjecucionProcesoComponent,
+    DialogSubprocesosComponent
   ],
   imports: [
     CommonModule,
-    BrowserAnimationsModule,
-    SharedPrimeNgModule,
-    RadioButtonModule,
-    CheckboxModule,
-    DialogModule,
-    PaginatorModule,
-    RouterModule,
-    HttpClientModule,
-    SpinnerModulo,
-    ReactiveFormsModule,
-    FormsModule
-  ],
-
-  exports:
-    [
-      EjecucionProcesosPageComponent,
-      ResultadoEjecucionProcesosPageComponent,
-      ConsultaProcesosProgramadosPageComponent,
-      DefinicionProcesosPageComponent,
-
-    ]
-
+    SharedModule
+  ]
 })
 export class ProcesosModule {
 }

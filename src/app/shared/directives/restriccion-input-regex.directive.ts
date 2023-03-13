@@ -1,12 +1,12 @@
 import { Directive, ElementRef, EventEmitter, HostListener, Input, Output } from '@angular/core';
-import { RegexPatternEnum } from "../../core/enums/regex-pattern.enum";
+import { RegexPattern } from "../models/enums/regex-pattern";
 
 @Directive({
   selector: '[restriccionInputRegex]'
 })
 export class RestriccionInputRegexDirective {
 
-  @Input() regex: RegexPatternEnum | undefined;
+  @Input() regex: RegexPattern | undefined;
   @Output() ngModelChange: EventEmitter<any> = new EventEmitter();
 
   constructor(private el: ElementRef) {

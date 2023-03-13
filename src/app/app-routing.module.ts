@@ -1,18 +1,18 @@
 import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
 import {
-  EjecucionProcesosPageComponent
-} from "./features/procesos/ejecucion-procesos-page/ejecucion-procesos-page.component";
+  EjecucionProcesosComponent
+} from "./features/procesos/ejecucion-procesos/ejecucion-procesos.component";
 import {
-  ResultadoEjecucionProcesosPageComponent
-} from "./features/procesos/resultado-ejecucion-procesos-page/resultado-ejecucion-procesos-page.component";
+  ResultadoEjecucionProcesosComponent
+} from "./features/procesos/resultado-ejecucion-procesos/resultado-ejecucion-procesos.component";
 import { InicioComponent } from "./shared/components/inicio/inicio.component";
 import {
-  ConsultaProcesosProgramadosPageComponent
-} from './features/procesos/consulta-procesos-programados-page/consulta-procesos-programados-page.component';
+  ConsultaProcesosProgramadosComponent
+} from './features/procesos/consulta-procesos-programados/consulta-procesos-programados.component';
 import {
-  DefinicionProcesosPageComponent
-} from './features/procesos/definicion-procesos-page/definicion-procesos-page.component';
+  DefinicionProcesosComponent
+} from './features/procesos/definicion-procesos/definicion-procesos.component';
 import {
   ParametrosEspecificosComponent
 } from "./features/parametros/parametros-especificos/parametros-especificos.component";
@@ -28,13 +28,12 @@ const routes: Routes = [
   {path: 'administracion/parametros-generales/comunes', component: ParametrosComunesComponent},
   {path: 'administracion/parametros-generales/especificos', component: ParametrosEspecificosComponent},
   {path: 'administracion/parametros-generales/comunes/pendientes', component: ParametrosComunesPendientesComponent},
-  {path: 'actualizacion/procesos/resultados', component: ResultadoEjecucionProcesosPageComponent},
-  {path: 'actualizacion/procesos/consulta', component: ConsultaProcesosProgramadosPageComponent},
-  {path: 'actualizacion/procesos/definicion', component: DefinicionProcesosPageComponent},
-  {path: 'actualizacion/procesos/ejecucion', component: EjecucionProcesosPageComponent},
-  {
-    path: '**', redirectTo: 'inicio-kepiaa'
-  }
+  {path: 'actualizacion/procesos/resultados', component: ResultadoEjecucionProcesosComponent},
+  {path: 'actualizacion/procesos/consulta', component: ConsultaProcesosProgramadosComponent},
+  {path: 'actualizacion/procesos/definicion', component: DefinicionProcesosComponent},
+  {path: 'actualizacion/procesos/ejecucion', component: EjecucionProcesosComponent},
+
+  {path: '**', redirectTo: 'inicio-kepiaa'},
 ];
 
 @NgModule({

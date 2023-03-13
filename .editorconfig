@@ -10,6 +10,7 @@ trim_trailing_whitespace = true
 
 [*.ts]
 quote_type = single
+insert_space_after_opening_and_before_closing_non_empty_braces = true
 
 [*.md]
 max_line_length = off

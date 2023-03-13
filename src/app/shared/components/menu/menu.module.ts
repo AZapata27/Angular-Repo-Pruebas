@@ -10,14 +10,11 @@ import { PanelMenuModule } from 'primeng/panelmenu';
   ],
   imports: [
     CommonModule,
-    PanelMenuModule
-  ],
+    PanelMenuModule],
 
-  exports:
-    [
-      MenuComponent
-    ]
-
+  exports: [
+    MenuComponent
+  ]
 })
 export class MenuModule {
 }
